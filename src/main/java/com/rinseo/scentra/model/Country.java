@@ -1,8 +1,18 @@
 package com.rinseo.scentra.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Country {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
+
+    public Country() {
+    }
 
     public Country(Long id, String name) {
         this.id = id;

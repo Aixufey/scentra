@@ -1,21 +1,26 @@
 package com.rinseo.scentra.model;
 
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
+@Entity
 public class Fragrance {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
+    @Column(name = "\"year\"")
     private int year;
-    private List<Note> notes;
 
     public Fragrance() {
     }
 
-    public Fragrance(Long id, String name, int year, List<Note> notes) {
+    public Fragrance(Long id, String name, int year) {
         this.id = id;
         this.name = name;
         this.year = year;
-        this.notes = notes;
     }
 
     public Long getId() {
@@ -42,21 +47,12 @@ public class Fragrance {
         this.year = year;
     }
 
-    public List<Note> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
-    }
-
     @Override
     public String toString() {
         return "Fragrance{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", year=" + year +
-                ", notes=" + notes +
                 '}';
     }
 }

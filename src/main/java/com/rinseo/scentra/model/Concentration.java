@@ -1,9 +1,19 @@
 package com.rinseo.scentra.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Concentration {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
     private String description;
+
+    public Concentration() {
+    }
 
     public Concentration(Long id, String name, String description) {
         this.id = id;

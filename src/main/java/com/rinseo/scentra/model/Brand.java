@@ -1,12 +1,23 @@
 package com.rinseo.scentra.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Brand {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
 
     public Brand(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Brand() {
+
     }
 
     public Long getId() {
