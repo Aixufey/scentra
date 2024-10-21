@@ -1,17 +1,21 @@
 package com.rinseo.scentra.model;
 
+import java.util.List;
+
 public class Fragrance {
     private Long id;
     private String name;
     private int year;
+    private List<Note> notes;
 
     public Fragrance() {
     }
 
-    public Fragrance(Long id, String name, int year) {
+    public Fragrance(Long id, String name, int year, List<Note> notes) {
         this.id = id;
         this.name = name;
         this.year = year;
+        this.notes = notes;
     }
 
     public Long getId() {
@@ -38,12 +42,21 @@ public class Fragrance {
         this.year = year;
     }
 
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+    }
+
     @Override
     public String toString() {
         return "Fragrance{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", year=" + year +
+                ", notes=" + notes +
                 '}';
     }
 }
