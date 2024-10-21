@@ -1,7 +1,9 @@
 package com.rinseo.scentra.controller;
 
+import com.rinseo.scentra.exception.FragranceNotFoundException;
 import com.rinseo.scentra.model.Fragrance;
-import com.rinseo.scentra.service.FragranceService;
+import com.rinseo.scentra.service.FragranceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -11,30 +13,32 @@ import java.util.List;
 
 @RestController
 public class FragranceController {
-    private final FragranceService fragranceService;
 
-    public FragranceController(FragranceService fragranceService) {
-        this.fragranceService = fragranceService;
+    private final FragranceRepository repo;
+
+    @Autowired
+    public FragranceController(FragranceRepository repo) {
+        this.repo = repo;
     }
 
     @GetMapping("/v1/fragrances")
     public List<Fragrance> getAllFragrances() {
-        return fragranceService.getAll();
+        return repo.findAll();
     }
 
     @GetMapping("/v1/fragrances/{id}")
     public Fragrance getById(@PathVariable long id) {
-        return fragranceService.getById(id);
+        return repo.findById(id).orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
     }
 
     @GetMapping("/v1/fragrances/name/{name}")
     public Fragrance getByName(@PathVariable String name) {
-        return fragranceService.getByName(name);
+        return repo.findByNameEqualsIgnoreCase(name);
     }
 
     @PostMapping("/v1/fragrances")
     public ResponseEntity<Fragrance> save(@RequestBody Fragrance fragrance) {
-        Fragrance savedFragrance = fragranceService.save(fragrance);
+        Fragrance savedFragrance = repo.saveAndFlush(fragrance);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -48,14 +52,18 @@ public class FragranceController {
     }
 
     @PutMapping("/v1/fragrances/{id}")
-    public Fragrance update(@PathVariable long id, @RequestBody Fragrance fragrance) {
-        fragranceService.updateById(id, fragrance);
-        return fragrance;
+    public ResponseEntity<Fragrance> update(@PathVariable long id, @RequestBody Fragrance fragrance) {
+        Fragrance foundFragrance = repo.findById(id)
+                .orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
+        foundFragrance.setName(fragrance.getName());
+        foundFragrance.setYear(fragrance.getYear());
+        Fragrance updatedFragrance = repo.saveAndFlush(foundFragrance);
+        return ResponseEntity.ok(updatedFragrance);
     }
 
     @DeleteMapping("/v1/fragrances/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        fragranceService.deleteById(id);
+        repo.deleteById(id);
         return ResponseEntity
                 .noContent()
                 .build();
