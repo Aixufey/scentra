@@ -1,15 +1,19 @@
 package com.rinseo.scentra.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Brand {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     public Brand(Long id, String name) {
         this.id = id;
@@ -34,6 +38,22 @@ public class Brand {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     @Override

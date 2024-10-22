@@ -1,24 +1,26 @@
 package com.rinseo.scentra.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Note {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "accord_id")
+    private Accord accord;
 
     public Note() {
     }
 
-    public Note(Long id, String name, String description) {
+    public Note(Long id, String name, String description, Accord accord) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.accord = accord;
     }
 
     public Long getId() {
@@ -43,6 +45,14 @@ public class Note {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Accord getAccord() {
+        return accord;
+    }
+
+    public void setAccord(Accord accord) {
+        this.accord = accord;
     }
 
     @Override
