@@ -8,6 +8,7 @@ import java.util.Set;
 public class Fragrance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "fragrance_id")
     private Long id;
     private String name;
     @Column(name = "\"year\"")

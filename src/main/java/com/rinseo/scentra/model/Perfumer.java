@@ -8,6 +8,7 @@ import java.util.Set;
 public class Perfumer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "perfumer_id")
     private Long id;
     private String name;
     @ManyToMany

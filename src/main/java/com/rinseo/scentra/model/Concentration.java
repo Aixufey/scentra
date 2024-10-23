@@ -1,14 +1,12 @@
 package com.rinseo.scentra.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Concentration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "concentration_id")
     private Long id;
     private String name;
     private String description;
