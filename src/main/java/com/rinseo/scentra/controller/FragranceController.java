@@ -2,6 +2,7 @@ package com.rinseo.scentra.controller;
 
 import com.rinseo.scentra.exception.FragranceNotFoundException;
 import com.rinseo.scentra.model.Fragrance;
+import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -52,13 +53,15 @@ public class FragranceController {
     }
 
     @PutMapping("/v1/fragrances/{id}")
-    public ResponseEntity<Fragrance> update(@PathVariable long id, @RequestBody Fragrance fragrance) {
+    public ResponseEntity<FragranceDTO> update(@PathVariable long id, @RequestBody FragranceDTO fragrance) {
         Fragrance foundFragrance = repo.findById(id)
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
-        foundFragrance.setName(fragrance.getName());
-        foundFragrance.setYear(fragrance.getYear());
+        foundFragrance.setName(fragrance.name());
+        foundFragrance.setYear(fragrance.year());
         Fragrance updatedFragrance = repo.saveAndFlush(foundFragrance);
-        return ResponseEntity.ok(updatedFragrance);
+
+        var updatedFragranceDTO = new FragranceDTO(updatedFragrance.getName(), updatedFragrance.getYear());
+        return ResponseEntity.ok(updatedFragranceDTO);
     }
 
     @DeleteMapping("/v1/fragrances/{id}")
