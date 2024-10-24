@@ -266,7 +266,19 @@ VALUES
     ('ambroxan', 'A modern synthetic compound with a dry amber musky smell.',
      (SELECT accord_id FROM accord WHERE name = 'musks')),
     ('oakmoss', 'An inky, bitter-smelling forest floor evocative. It is an essential part of chypre fragrances and fougère fragrances',
-     (SELECT accord_id FROM accord WHERE name = 'woods'));
+     (SELECT accord_id FROM accord WHERE name = 'woods')),
+    ('mastic', 'A fresh balsamic, turpentine-like scent',
+     (SELECT accord_id FROM accord WHERE name = 'resins')),
+    ('mineral notes', 'An abstract expressly synthetic note',
+     (SELECT accord_id FROM accord WHERE name = 'natural')),
+    ('mandarin orange', 'A sweet hesperidic, juicy, honeyed note.',
+     (SELECT accord_id FROM accord WHERE name = 'citrus')),
+    ('musk', 'The musk is a secretion inside an internal pouch on the abdomen of the male deer.',
+     (SELECT accord_id FROM accord WHERE name = 'musks')),
+    ('amber', 'A sweet, resinous, cozy and warm, often rather powdery note.',
+     (SELECT accord_id FROM accord WHERE name = 'musks')),
+    ('lavender', 'An aromatic floral clean note, with green, fresh spicy, licorice facets.',
+     (SELECT accord_id FROM accord WHERE name = 'flowers'));
 
 -- Insert concentrations of fragrances
 INSERT INTO concentration (name, description)
