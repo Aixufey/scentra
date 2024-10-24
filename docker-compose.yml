@@ -1,0 +1,65 @@
+version: '1'
+
+services:
+  db:
+    container_name: postgres_container
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: scentra
+      POSTGRES_PASSWORD: scentra
+      POSTGRES_DB: scentra
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./src/main/resources/db:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scentra"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgAdmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  app:
+    container_name: scentra_container
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/scentra
+      SPRING_DATASOURCE_USERNAME: scentra
+      SPRING_DATASOURCE_PASSWORD: scentra
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+  pgadmin-data:
+
+networks:
+  app-network:
+    driver: bridge
