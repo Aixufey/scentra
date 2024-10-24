@@ -355,29 +355,24 @@ SELECT 'Maison Francis Kurkdjian',
        (SELECT company_id FROM company WHERE name = 'LVMH');
 
 -- Insert perfumers
-INSERT INTO perfumer (name, brand_id, company_id, country_id)
+INSERT INTO perfumer (name, company_id, country_id)
 SELECT 'Alberto Morillas',
-       (SELECT brand_id FROM brand WHERE name = 'Giorgio Armani'),
        (SELECT company_id FROM company WHERE name = 'Firmenich'),
        (SELECT country_id FROM country WHERE name = 'Spain');
-INSERT INTO perfumer (name, brand_id, company_id, country_id)
+INSERT INTO perfumer (name, company_id, country_id)
 SELECT 'Jacques Polge',
-       (SELECT brand_id FROM brand WHERE name = 'Chanel'),
        (SELECT company_id FROM company WHERE name = 'Chanel'),
        (SELECT country_id FROM country WHERE name = 'France');
-INSERT INTO perfumer (name, brand_id, company_id, country_id)
+INSERT INTO perfumer (name, company_id, country_id)
 SELECT 'Francis Kurkdjian',
-       (SELECT brand_id FROM brand WHERE name = 'Maison Francis Kurkdjian'),
        (SELECT company_id FROM company WHERE name = 'LVMH'),
        (SELECT country_id FROM country WHERE name = 'France');
-INSERT INTO perfumer (name, brand_id, company_id, country_id)
+INSERT INTO perfumer (name, company_id, country_id)
 SELECT 'Olivier Cresp',
-       (SELECT brand_id FROM brand WHERE name = 'Paco Rabanne'),
        (SELECT company_id FROM company WHERE name = 'Puig'),
        (SELECT country_id FROM country WHERE name = 'France');
-INSERT INTO perfumer (name, brand_id, company_id, country_id)
+INSERT INTO perfumer (name, company_id, country_id)
 SELECT 'Thierry Wasser',
-       (SELECT brand_id FROM brand WHERE name = 'Guerlain'),
        (SELECT company_id FROM company WHERE name = 'LVMH'),
        (SELECT country_id FROM country WHERE name = 'France');
 

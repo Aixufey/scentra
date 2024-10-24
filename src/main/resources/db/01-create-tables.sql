@@ -62,10 +62,8 @@ CREATE TABLE perfumer
 (
     perfumer_id SERIAL PRIMARY KEY,
     name        TEXT NOT NULL UNIQUE,
-    brand_id    INT,
     company_id  INT,
     country_id  INT,
-    FOREIGN KEY (brand_id) REFERENCES brand (brand_id),
     FOREIGN KEY (company_id) REFERENCES company (company_id),
     FOREIGN KEY (country_id) REFERENCES country (country_id)
 );
