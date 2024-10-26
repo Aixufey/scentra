@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
-public class PerfumerNotFoundException extends RuntimeException {
-    public PerfumerNotFoundException(String message) {
+public class AccordNotFoundException extends RuntimeException {
+    public AccordNotFoundException(String message) {
         super(message);
     }
 }
