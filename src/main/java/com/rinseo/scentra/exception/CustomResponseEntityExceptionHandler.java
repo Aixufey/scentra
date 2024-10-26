@@ -24,4 +24,16 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(CountryNotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handleCountryNotFoundException(CountryNotFoundException ex, WebRequest request) throws Exception {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PerfumerNotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handlePerfumerNotFoundException(PerfumerNotFoundException ex, WebRequest request) throws Exception {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
 }
