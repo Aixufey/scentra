@@ -37,6 +37,9 @@ public class FragranceController {
         return repo.findByNameEqualsIgnoreCase(name);
     }
 
+    /**
+     * Posting does not work with H2 because of returning the generated id is not supported.
+     */
     @PostMapping("/v1/fragrances")
     public ResponseEntity<Fragrance> save(@RequestBody Fragrance fragrance) {
         Fragrance savedFragrance = repo.saveAndFlush(fragrance);
