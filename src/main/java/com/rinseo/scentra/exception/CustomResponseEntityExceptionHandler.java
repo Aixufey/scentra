@@ -48,4 +48,10 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ConcentrationNotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handleConcentrationNotFoundException(ConcentrationNotFoundException ex, WebRequest request) throws Exception {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
 }
