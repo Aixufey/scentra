@@ -5,6 +5,8 @@ import com.rinseo.scentra.model.Note;
 import com.rinseo.scentra.model.dto.NoteDTO;
 import com.rinseo.scentra.service.NoteRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -18,9 +20,19 @@ import java.util.List;
 public class NoteController {
     private final NoteRepository repo;
 
+    // Pagination with JPA
+    // Example: 30 items, 5 items per page -> 6 pages
+    // /notes?page=0&size=5
+    // Max size is 20 items per page enforced by the controller
     @GetMapping("/notes")
-    public List<Note> getNotes() {
-        return repo.findAll();
+    public Page<Note> getNotes(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        int maxSize = 20;
+
+        if (size > maxSize) {
+            size = maxSize;
+        }
+
+        return repo.findAll(PageRequest.of(page, size));
     }
 
     @GetMapping("/notes/{id}")
