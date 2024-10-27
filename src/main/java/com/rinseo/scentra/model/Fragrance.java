@@ -1,6 +1,8 @@
 package com.rinseo.scentra.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Set;
@@ -13,6 +15,8 @@ public class Fragrance {
     private Long id;
     @NotBlank(message = "Fragrance name is required.")
     private String name;
+    @Min(value = 1900, message = "Year must be greater than 1900.")
+    @Max(value = 2025, message = "Year must be less than 2026.")
     @Column(name = "\"year\"")
     private int year;
     @ManyToOne

@@ -5,6 +5,7 @@ import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceRepository;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class FragranceController {
 
     private final FragranceRepository repo;
@@ -42,8 +44,10 @@ public class FragranceController {
      * Posting does not work with H2 because of returning the generated id is not supported.
      */
     @PostMapping("/v1/fragrances")
-    public ResponseEntity<Fragrance> save(@Valid @RequestBody Fragrance fragrance) {
-        Fragrance savedFragrance = repo.saveAndFlush(fragrance);
+    public ResponseEntity<FragranceDTO> save(@Valid @RequestBody FragranceDTO fragrance) {
+        // Convert DTO to Entity
+        Fragrance fragranceDTO = new ModelMapper().map(fragrance, Fragrance.class);
+        Fragrance savedFragrance = repo.saveAndFlush(fragranceDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -53,7 +57,7 @@ public class FragranceController {
 
         return ResponseEntity
                 .created(location)
-                .body(savedFragrance);
+                .body(new FragranceDTO(savedFragrance.getName(), savedFragrance.getYear()));
     }
 
     @PutMapping("/v1/fragrances/{id}")
