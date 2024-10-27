@@ -1,4 +1,6 @@
 package com.rinseo.scentra.model.dto;
 
-public record ConcentrationDTO(String name, String description) {
+import jakarta.validation.constraints.NotBlank;
+
+public record ConcentrationDTO(@NotBlank(message = "Concentration name is required.") String name, String description) {
 }

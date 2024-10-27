@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.CountryNotFoundException;
 import com.rinseo.scentra.model.Country;
 import com.rinseo.scentra.model.dto.CountryDTO;
 import com.rinseo.scentra.service.CountryRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class CountryController {
     }
 
     @PutMapping("/countries/{id}")
-    public ResponseEntity<CountryDTO> updateCountry(@PathVariable long id, @RequestBody CountryDTO country) {
+    public ResponseEntity<CountryDTO> updateCountry(@PathVariable long id, @Valid @RequestBody CountryDTO country) {
         Country foundCountry = repo.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException("Country not found with id: " + id));
         foundCountry.setName(country.name());
@@ -45,7 +46,7 @@ public class CountryController {
     }
 
     @PostMapping("/countries")
-    public ResponseEntity<Country> save(@RequestBody Country country) {
+    public ResponseEntity<Country> save(@Valid @RequestBody Country country) {
         Country savedCountry = repo.saveAndFlush(country);
 
         URI location = ServletUriComponentsBuilder

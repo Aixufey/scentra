@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.ConcentrationNotFoundException;
 import com.rinseo.scentra.model.Concentration;
 import com.rinseo.scentra.model.dto.ConcentrationDTO;
 import com.rinseo.scentra.service.ConcentrationRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class ConcentrationController {
     }
 
     @PutMapping("/concentrations/{id}")
-    public ResponseEntity<ConcentrationDTO> update(@PathVariable long id, @RequestBody ConcentrationDTO concentration) {
+    public ResponseEntity<ConcentrationDTO> update(@PathVariable long id, @Valid @RequestBody ConcentrationDTO concentration) {
         Concentration foundConcentration = repo.findById(id)
                 .orElseThrow(() -> new ConcentrationNotFoundException("Concentration with id " + id + " not found"));
         foundConcentration.setName(concentration.name());
@@ -42,7 +43,7 @@ public class ConcentrationController {
     }
 
     @PostMapping("/concentrations")
-    public ResponseEntity<Concentration> create(@RequestBody Concentration concentration) {
+    public ResponseEntity<Concentration> create(@Valid @RequestBody Concentration concentration) {
         Concentration savedConcentration = repo.saveAndFlush(concentration);
 
         URI location = ServletUriComponentsBuilder

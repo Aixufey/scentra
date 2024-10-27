@@ -1,6 +1,7 @@
 package com.rinseo.scentra.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id")
     private Long id;
+    @NotBlank(message = "Brand name is required.")
     private String name;
     @ManyToOne
     @JoinColumn(name = "country_id")

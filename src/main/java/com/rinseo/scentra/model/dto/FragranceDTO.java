@@ -1,4 +1,6 @@
 package com.rinseo.scentra.model.dto;
 
-public record FragranceDTO(String name, int year) {
+import jakarta.validation.constraints.NotBlank;
+
+public record FragranceDTO(@NotBlank(message = "Fragrance name is required.") String name, int year) {
 }

@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.NoteNotFoundException;
 import com.rinseo.scentra.model.Note;
 import com.rinseo.scentra.model.dto.NoteDTO;
 import com.rinseo.scentra.service.NoteRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,7 +43,7 @@ public class NoteController {
     }
 
     @PutMapping("/notes/{id}")
-    public ResponseEntity<NoteDTO> update(@PathVariable long id, @RequestBody NoteDTO note) {
+    public ResponseEntity<NoteDTO> update(@PathVariable long id, @Valid @RequestBody NoteDTO note) {
         Note foundNote = repo.findById(id)
                 .orElseThrow(() -> new NoteNotFoundException("Note not found with id " + id));
         foundNote.setName(note.name());
@@ -53,7 +54,7 @@ public class NoteController {
     }
 
     @PostMapping("/notes")
-    public ResponseEntity<Note> create(@RequestBody Note note) {
+    public ResponseEntity<Note> create(@Valid @RequestBody Note note) {
         Note savedNote = repo.saveAndFlush(note);
 
         URI location = ServletUriComponentsBuilder

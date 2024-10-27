@@ -1,4 +1,6 @@
 package com.rinseo.scentra.model.dto;
 
-public record NoteDTO(String name, String description) {
+import jakarta.validation.constraints.NotBlank;
+
+public record NoteDTO(@NotBlank(message = "Note name is required.") String name, String description) {
 }

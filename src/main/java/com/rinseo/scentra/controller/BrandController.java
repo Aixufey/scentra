@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.BrandNotFoundException;
 import com.rinseo.scentra.model.Brand;
 import com.rinseo.scentra.model.dto.BrandDTO;
 import com.rinseo.scentra.service.BrandRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class BrandController {
     }
 
     @PutMapping("/brands/{id}")
-    public ResponseEntity<BrandDTO> update(@PathVariable long id, @RequestBody BrandDTO brand) {
+    public ResponseEntity<BrandDTO> update(@PathVariable long id, @Valid @RequestBody BrandDTO brand) {
         Brand foundBrand = repo.findById(id)
                 .orElseThrow(() -> new BrandNotFoundException("Brand by id " + id + " was not found"));
         foundBrand.setName(brand.name());
@@ -40,7 +41,7 @@ public class BrandController {
     }
 
     @PostMapping("/brands")
-    public ResponseEntity<Brand> create(@RequestBody Brand brand) {
+    public ResponseEntity<Brand> create(@Valid @RequestBody Brand brand) {
         Brand newBrand = repo.saveAndFlush(brand);
 
         URI location = ServletUriComponentsBuilder

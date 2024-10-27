@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.FragranceNotFoundException;
 import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class FragranceController {
      * Posting does not work with H2 because of returning the generated id is not supported.
      */
     @PostMapping("/v1/fragrances")
-    public ResponseEntity<Fragrance> save(@RequestBody Fragrance fragrance) {
+    public ResponseEntity<Fragrance> save(@Valid @RequestBody Fragrance fragrance) {
         Fragrance savedFragrance = repo.saveAndFlush(fragrance);
 
         URI location = ServletUriComponentsBuilder
@@ -56,7 +57,7 @@ public class FragranceController {
     }
 
     @PutMapping("/v1/fragrances/{id}")
-    public ResponseEntity<FragranceDTO> update(@PathVariable long id, @RequestBody FragranceDTO fragrance) {
+    public ResponseEntity<FragranceDTO> update(@PathVariable long id, @Valid @RequestBody FragranceDTO fragrance) {
         Fragrance foundFragrance = repo.findById(id)
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
         foundFragrance.setName(fragrance.name());

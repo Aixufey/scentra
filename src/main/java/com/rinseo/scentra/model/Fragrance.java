@@ -1,6 +1,7 @@
 package com.rinseo.scentra.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Set;
 
@@ -10,6 +11,7 @@ public class Fragrance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fragrance_id")
     private Long id;
+    @NotBlank(message = "Fragrance name is required.")
     private String name;
     @Column(name = "\"year\"")
     private int year;

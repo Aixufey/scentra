@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.CompanyNotFoundException;
 import com.rinseo.scentra.model.Company;
 import com.rinseo.scentra.model.dto.CompanyDTO;
 import com.rinseo.scentra.service.CompanyRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class CompanyController {
     }
 
     @PutMapping("/companies/{id}")
-    public ResponseEntity<CompanyDTO> update(@PathVariable long id, @RequestBody CompanyDTO company) {
+    public ResponseEntity<CompanyDTO> update(@PathVariable long id, @Valid @RequestBody CompanyDTO company) {
         Company foundCompany = repo.findById(id)
                 .orElseThrow(() -> new CompanyNotFoundException("Company with id " + id + " not found"));
         foundCompany.setName(company.name());
@@ -41,7 +42,7 @@ public class CompanyController {
     }
 
     @PostMapping("/companies")
-    public ResponseEntity<Company> create(@RequestBody Company company) {
+    public ResponseEntity<Company> create(@Valid @RequestBody Company company) {
         Company savedCompany = repo.saveAndFlush(company);
 
         URI location = ServletUriComponentsBuilder

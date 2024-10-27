@@ -1,6 +1,7 @@
 package com.rinseo.scentra.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ public class Perfumer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "perfumer_id")
     private Long id;
+    @NotBlank(message = "Perfumer name is required.")
     private String name;
     @ManyToMany
     @JoinTable(

@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.PerfumerNotFoundException;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
 import com.rinseo.scentra.service.PerfumerRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class PerfumerController {
     }
 
     @PutMapping("/perfumers/{id}")
-    public ResponseEntity<PerfumerDTO> update(@PathVariable long id, @RequestBody PerfumerDTO perfumer) {
+    public ResponseEntity<PerfumerDTO> update(@PathVariable long id, @Valid @RequestBody PerfumerDTO perfumer) {
         Perfumer foundPerfumer = repo.findById(id)
                 .orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
         foundPerfumer.setName(perfumer.name());
@@ -49,7 +50,7 @@ public class PerfumerController {
 
 
     @PostMapping("/perfumers")
-    public ResponseEntity<Perfumer> save(@RequestBody Perfumer perfumer) {
+    public ResponseEntity<Perfumer> save(@Valid @RequestBody Perfumer perfumer) {
         Perfumer savedPerfumer = repo.saveAndFlush(perfumer);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

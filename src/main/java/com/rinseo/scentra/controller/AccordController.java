@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.AccordNotFoundException;
 import com.rinseo.scentra.model.Accord;
 import com.rinseo.scentra.model.dto.AccordDTO;
 import com.rinseo.scentra.service.AccordRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class AccordController {
     }
 
     @PutMapping("/accords/{id}")
-    public ResponseEntity<AccordDTO> update(@PathVariable long id, @RequestBody AccordDTO accord) {
+    public ResponseEntity<AccordDTO> update(@PathVariable long id, @Valid @RequestBody AccordDTO accord) {
         Accord foundAccord = repo.findById(id)
                 .orElseThrow(() -> new AccordNotFoundException("Accord not found with id: " + id));
 
@@ -42,7 +43,7 @@ public class AccordController {
     }
 
     @PostMapping("/accords")
-    public ResponseEntity<Accord> create(@RequestBody Accord accord) {
+    public ResponseEntity<Accord> create(@Valid @RequestBody Accord accord) {
         Accord savedAccord = repo.saveAndFlush(accord);
 
         URI location = ServletUriComponentsBuilder

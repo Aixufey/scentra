@@ -1,4 +1,6 @@
 package com.rinseo.scentra.model.dto;
 
-public record AccordDTO(String name, String description) {
+import jakarta.validation.constraints.NotBlank;
+
+public record AccordDTO(@NotBlank(message = "Accord name is required.") String name, String description) {
 }
