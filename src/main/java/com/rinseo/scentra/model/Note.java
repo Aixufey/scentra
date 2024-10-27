@@ -1,7 +1,11 @@
 package com.rinseo.scentra.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@Data
 @Entity
 public class Note {
     @Id
@@ -14,54 +18,9 @@ public class Note {
     @JoinColumn(name = "accord_id")
     private Accord accord;
 
-    public Note() {
-    }
-
-    public Note(Long id, String name, String description, Accord accord) {
-        this.id = id;
+    public Note(String name, String description, Accord accord) {
         this.name = name;
         this.description = description;
         this.accord = accord;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Accord getAccord() {
-        return accord;
-    }
-
-    public void setAccord(Accord accord) {
-        this.accord = accord;
-    }
-
-    @Override
-    public String toString() {
-        return "Note{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }
