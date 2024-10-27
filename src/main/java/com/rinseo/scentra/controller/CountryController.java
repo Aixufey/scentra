@@ -12,28 +12,29 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@RequestMapping("/api/v1")
 @AllArgsConstructor
 @RestController()
 public class CountryController {
     private final CountryRepository repo;
 
-    @GetMapping("/v1/countries")
+    @GetMapping("/countries")
     public List<Country> getAllCountries() {
         return repo.findAll();
     }
 
-    @GetMapping("/v1/countries/name/{name}")
+    @GetMapping("/countries/name/{name}")
     public Country getCountryByName(@PathVariable String name) {
         return repo.findCountryByNameEqualsIgnoreCase(name);
     }
 
-    @GetMapping("/v1/countries/{id}")
+    @GetMapping("/countries/{id}")
     public Country getCountryById(@PathVariable long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException("Country not found with id: " + id));
     }
 
-    @PutMapping("/v1/countries/{id}")
+    @PutMapping("/countries/{id}")
     public ResponseEntity<CountryDTO> updateCountry(@PathVariable long id, @RequestBody CountryDTO country) {
         Country foundCountry = repo.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException("Country not found with id: " + id));
@@ -43,7 +44,7 @@ public class CountryController {
         return ResponseEntity.ok(new CountryDTO(updatedCountry.getName()));
     }
 
-    @PostMapping("/v1/countries")
+    @PostMapping("/countries")
     public ResponseEntity<Country> save(@RequestBody Country country) {
         Country savedCountry = repo.saveAndFlush(country);
 
@@ -57,7 +58,7 @@ public class CountryController {
                 .body(savedCountry);
     }
 
-    @DeleteMapping("/v1/countries/{id}")
+    @DeleteMapping("/countries/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         repo.deleteById(id);
         return ResponseEntity.noContent().build();

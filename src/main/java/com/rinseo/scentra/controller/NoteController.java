@@ -12,9 +12,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@RestController
-@AllArgsConstructor
 @RequestMapping("/api/v1")
+@AllArgsConstructor
+@RestController
 public class NoteController {
     private final NoteRepository repo;
 

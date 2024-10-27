@@ -13,29 +13,30 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@RequestMapping("/api/v1")
 @AllArgsConstructor
 @Slf4j
 @RestController
 public class PerfumerController {
     private PerfumerRepository repo;
 
-    @GetMapping("/v1/perfumers")
+    @GetMapping("/perfumers")
     public List<Perfumer> getAllPerfumers() {
         log.info("Fetching all perfumers");
         return repo.findAll();
     }
 
-    @GetMapping("/v1/perfumers/{id}")
+    @GetMapping("/perfumers/{id}")
     public Perfumer getPerfumerById(@PathVariable long id) {
         return repo.findById(id).orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
     }
 
-    @GetMapping("/v1/perfumers/name/{name}")
+    @GetMapping("/perfumers/name/{name}")
     public List<Perfumer> getPerfumersByName(@PathVariable String name) {
         return repo.findByNameContainingIgnoreCase(name);
     }
 
-    @PutMapping("/v1/perfumers/{id}")
+    @PutMapping("/perfumers/{id}")
     public ResponseEntity<PerfumerDTO> update(@PathVariable long id, @RequestBody PerfumerDTO perfumer) {
         Perfumer foundPerfumer = repo.findById(id)
                 .orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
@@ -47,7 +48,7 @@ public class PerfumerController {
     }
 
 
-    @PostMapping("/v1/perfumers")
+    @PostMapping("/perfumers")
     public ResponseEntity<Perfumer> save(@RequestBody Perfumer perfumer) {
         Perfumer savedPerfumer = repo.saveAndFlush(perfumer);
         URI location = ServletUriComponentsBuilder

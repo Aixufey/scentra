@@ -12,23 +12,24 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@RequestMapping("/api/v1")
 @AllArgsConstructor
 @RestController
 public class AccordController {
     private final AccordRepository repo;
 
-    @GetMapping("/v1/accords")
+    @GetMapping("/accords")
     public List<Accord> getAllAccords() {
         return repo.findAll();
     }
 
-    @GetMapping("/v1/accords/{id}")
+    @GetMapping("/accords/{id}")
     public Accord getAccordById(@PathVariable long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new AccordNotFoundException("Accord not found with id: " + id));
     }
 
-    @PutMapping("/v1/accords/{id}")
+    @PutMapping("/accords/{id}")
     public ResponseEntity<AccordDTO> update(@PathVariable long id, @RequestBody AccordDTO accord) {
         Accord foundAccord = repo.findById(id)
                 .orElseThrow(() -> new AccordNotFoundException("Accord not found with id: " + id));
@@ -40,7 +41,7 @@ public class AccordController {
         return ResponseEntity.ok(new AccordDTO(updatedAccord.getName(), updatedAccord.getDescription()));
     }
 
-    @PostMapping("/v1/accords")
+    @PostMapping("/accords")
     public ResponseEntity<Accord> create(@RequestBody Accord accord) {
         Accord savedAccord = repo.saveAndFlush(accord);
 
@@ -54,7 +55,7 @@ public class AccordController {
                 .body(savedAccord);
     }
 
-    @DeleteMapping("/v1/accords/{id}")
+    @DeleteMapping("/accords/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         repo.deleteById(id);
         return ResponseEntity.noContent().build();
