@@ -31,7 +31,9 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Run OWASP Dependency Check
-      run: mvn dependency-check:check
+      env:
+        NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+      run: mvn dependency-check:check -Dnvd.api.key=${{ secrets.NVD_API_KEY }}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
