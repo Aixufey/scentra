@@ -1,9 +1,8 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.exception.CountryNotFoundException;
 import com.rinseo.scentra.model.Country;
 import com.rinseo.scentra.model.dto.CountryDTO;
-import com.rinseo.scentra.repository.CountryRepository;
+import com.rinseo.scentra.service.CountryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,51 +16,52 @@ import java.util.List;
 @AllArgsConstructor
 @RestController()
 public class CountryController {
-    private final CountryRepository repo;
+    private final CountryService service;
 
     @GetMapping("/countries")
     public List<Country> getAllCountries() {
-        return repo.findAll();
+        return service.getAll();
     }
 
     @GetMapping("/countries/name/{name}")
     public Country getCountryByName(@PathVariable String name) {
-        return repo.findCountryByNameEqualsIgnoreCase(name);
+        return service.getByName(name);
     }
 
     @GetMapping("/countries/{id}")
     public Country getCountryById(@PathVariable long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new CountryNotFoundException("Country not found with id: " + id));
+        return service.getById(id);
     }
 
     @PutMapping("/countries/{id}")
     public ResponseEntity<CountryDTO> updateCountry(@PathVariable long id, @Valid @RequestBody CountryDTO country) {
-        Country foundCountry = repo.findById(id)
-                .orElseThrow(() -> new CountryNotFoundException("Country not found with id: " + id));
-        foundCountry.setName(country.name());
-        Country updatedCountry = repo.saveAndFlush(foundCountry);
+        CountryDTO countryDTO = service.update(id, country);
 
-        return ResponseEntity.ok(new CountryDTO(updatedCountry.getName()));
+        return ResponseEntity
+                .ok(countryDTO);
     }
 
     @PostMapping("/countries")
-    public ResponseEntity<Country> save(@Valid @RequestBody Country country) {
-        Country savedCountry = repo.saveAndFlush(country);
+    public ResponseEntity<CountryDTO> save(@Valid @RequestBody CountryDTO country) {
+        CountryDTO countryDTO = service.create(country);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedCountry.getId())
+                .buildAndExpand(countryDTO.id())
                 .toUri();
+
         return ResponseEntity
                 .created(location)
-                .body(savedCountry);
+                .body(countryDTO);
     }
 
     @DeleteMapping("/countries/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        repo.deleteById(id);
-        return ResponseEntity.noContent().build();
+        service.delete(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
