@@ -2,10 +2,12 @@ package com.rinseo.scentra.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rinseo.scentra.model.Fragrance;
+import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,7 +21,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @WebMvcTest(controllers = FragranceController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 @MockBean({FragranceRepository.class})
@@ -34,9 +35,8 @@ class FragranceControllerTest {
     @DisplayName("Fragrance can be saved")
     void testSaveFragrance_whenFragranceIsValid_thenReturnFragranceDetails() throws Exception {
         // Arrange
-        Fragrance fragranceRequest = new Fragrance();
-        fragranceRequest.setName("Test Fragrance");
-        fragranceRequest.setYear(2025);
+        FragranceDTO fragranceDTO = new FragranceDTO("Test Fragrance", 2027);
+        Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
         when(repo.saveAndFlush(any(Fragrance.class))).thenReturn(fragranceRequest);
 
@@ -64,9 +64,8 @@ class FragranceControllerTest {
     @DisplayName("Fragrance year validation")
     void testSaveFragrance_whenYearIsInvalid_thenReturnBadRequest() throws Exception {
         // Arrange
-        Fragrance fragranceRequest = new Fragrance();
-        fragranceRequest.setName("Test Fragrance");
-        fragranceRequest.setYear(2026);
+        FragranceDTO fragranceDTO = new FragranceDTO("Test Fragrance", 2027);
+        Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
         when(repo.saveAndFlush(any(Fragrance.class))).thenReturn(fragranceRequest);
 

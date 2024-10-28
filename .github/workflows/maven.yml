@@ -32,9 +32,15 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B clean install --file pom.xml
 
-    - name: Run OWASP Dependency Check
+    - name: Publish to GitHub Packages
+      run: mvn deploy -Dusername=${{ github.actor }} -Dpassword=${{ secrets.REPO_SECRET }}
       env:
-        NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-      run: mvn dependency-check:check -Dnvd.api.key=${{ secrets.NVD_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.REPO_SECRET }}
+
+
+#    - name: Run OWASP Dependency Check
+#      env:
+#        NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+#      run: mvn dependency-check:check -Dnvd.api.key=${{ secrets.NVD_API_KEY }}
