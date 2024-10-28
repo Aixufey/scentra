@@ -3,7 +3,7 @@ package com.rinseo.scentra.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.dto.FragranceDTO;
-import com.rinseo.scentra.service.FragranceRepository;
+import com.rinseo.scentra.service.FragranceServiceV2Impl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,22 +23,22 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 @WebMvcTest(controllers = FragranceController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
-@MockBean({FragranceRepository.class})
+@MockBean({FragranceServiceV2Impl.class})
 class FragranceControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
 //    @MockBean
-    private FragranceRepository repo;
+    private FragranceServiceV2Impl service;
 
     @Test
     @DisplayName("Fragrance can be saved")
     void testSaveFragrance_whenFragranceIsValid_thenReturnFragranceDetails() throws Exception {
         // Arrange
-        FragranceDTO fragranceDTO = new FragranceDTO("Test Fragrance", 2027);
+        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2027);
         Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
-        when(repo.saveAndFlush(any(Fragrance.class))).thenReturn(fragranceRequest);
+        when(service.create(any(FragranceDTO.class))).thenReturn(fragranceDTO);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/fragrances")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -64,10 +64,10 @@ class FragranceControllerTest {
     @DisplayName("Fragrance year validation")
     void testSaveFragrance_whenYearIsInvalid_thenReturnBadRequest() throws Exception {
         // Arrange
-        FragranceDTO fragranceDTO = new FragranceDTO("Test Fragrance", 2027);
+        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2027);
         Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
-        when(repo.saveAndFlush(any(Fragrance.class))).thenReturn(fragranceRequest);
+        when(service.create(any(FragranceDTO.class))).thenReturn(fragranceDTO);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/fragrances")
                 .contentType(MediaType.APPLICATION_JSON)
