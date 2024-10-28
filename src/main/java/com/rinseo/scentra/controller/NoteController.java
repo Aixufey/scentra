@@ -1,13 +1,11 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.exception.NoteNotFoundException;
 import com.rinseo.scentra.model.Note;
 import com.rinseo.scentra.model.dto.NoteDTO;
-import com.rinseo.scentra.repository.NoteRepository;
+import com.rinseo.scentra.service.NoteServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -18,7 +16,7 @@ import java.net.URI;
 @AllArgsConstructor
 @RestController
 public class NoteController {
-    private final NoteRepository repo;
+    private final NoteServiceImpl service;
 
     // Pagination with JPA
     // Example: 30 items, 5 items per page -> 6 pages
@@ -26,50 +24,43 @@ public class NoteController {
     // Max size is 20 items per page enforced by the controller
     @GetMapping("/notes")
     public Page<Note> getNotes(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
-        int maxSize = 20;
-
-        if (size > maxSize) {
-            size = maxSize;
-        }
-
-        return repo.findAll(PageRequest.of(page, size));
+        return service.getAll(page, size);
     }
 
     @GetMapping("/notes/{id}")
     public Note getNoteById(@PathVariable long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new NoteNotFoundException("Note not found with id " + id));
+        return service.getById(id);
     }
 
     @PutMapping("/notes/{id}")
     public ResponseEntity<NoteDTO> update(@PathVariable long id, @Valid @RequestBody NoteDTO note) {
-        Note foundNote = repo.findById(id)
-                .orElseThrow(() -> new NoteNotFoundException("Note not found with id " + id));
-        foundNote.setName(note.name());
-        foundNote.setDescription(note.description());
-        Note updatedNote = repo.saveAndFlush(foundNote);
+        NoteDTO noteDTO = service.update(id, note);
 
-        return ResponseEntity.ok(new NoteDTO(updatedNote.getName(), updatedNote.getDescription()));
+        return ResponseEntity
+                .ok(noteDTO);
     }
 
     @PostMapping("/notes")
-    public ResponseEntity<Note> create(@Valid @RequestBody Note note) {
-        Note savedNote = repo.saveAndFlush(note);
+    public ResponseEntity<NoteDTO> create(@Valid @RequestBody NoteDTO note) {
+        NoteDTO noteDTO = service.create(note);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedNote.getId())
+                .buildAndExpand(noteDTO.id())
                 .toUri();
         return ResponseEntity
                 .created(location)
-                .body(savedNote);
+                .body(noteDTO);
     }
 
     @DeleteMapping("/notes/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        repo.deleteById(id);
-        return ResponseEntity.noContent().build();
+        service.deleteById(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
 }
