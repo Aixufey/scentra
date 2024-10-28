@@ -1,9 +1,8 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.exception.PerfumerNotFoundException;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
-import com.rinseo.scentra.repository.PerfumerRepository;
+import com.rinseo.scentra.service.PerfumerServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,47 +18,50 @@ import java.util.List;
 @Slf4j
 @RestController
 public class PerfumerController {
-    private PerfumerRepository repo;
+    private PerfumerServiceImpl service;
 
     @GetMapping("/perfumers")
     public List<Perfumer> getAllPerfumers() {
         log.info("Fetching all perfumers");
-        return repo.findAll();
+        return service.getAll();
     }
 
     @GetMapping("/perfumers/{id}")
     public Perfumer getPerfumerById(@PathVariable long id) {
-        return repo.findById(id).orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
+        return service.getById(id);
     }
 
     @GetMapping("/perfumers/name/{name}")
     public List<Perfumer> getPerfumersByName(@PathVariable String name) {
-        return repo.findByNameContainingIgnoreCase(name);
+        return service.getByName(name);
     }
 
     @PutMapping("/perfumers/{id}")
     public ResponseEntity<PerfumerDTO> update(@PathVariable long id, @Valid @RequestBody PerfumerDTO perfumer) {
-        Perfumer foundPerfumer = repo.findById(id)
-                .orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
-        foundPerfumer.setName(perfumer.name());
-        Perfumer updatedPerfumer = repo.saveAndFlush(foundPerfumer);
+        PerfumerDTO perfumerDTO = service.update(id, perfumer);
 
         return ResponseEntity
-                .ok(new PerfumerDTO(updatedPerfumer.getName()));
+                .ok(perfumerDTO);
     }
 
 
     @PostMapping("/perfumers")
-    public ResponseEntity<Perfumer> save(@Valid @RequestBody Perfumer perfumer) {
-        Perfumer savedPerfumer = repo.saveAndFlush(perfumer);
+    public ResponseEntity<PerfumerDTO> save(@Valid @RequestBody PerfumerDTO perfumer) {
+        PerfumerDTO perfumerDTO = service.create(perfumer);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedPerfumer.getId())
+                .buildAndExpand(perfumerDTO.id())
                 .toUri();
 
         return ResponseEntity
                 .created(location)
-                .body(savedPerfumer);
+                .body(perfumerDTO);
+    }
+
+    @DeleteMapping("/perfumers/{id}")
+    public void delete(@PathVariable long id) {
+        service.deleteById(id);
     }
 }
