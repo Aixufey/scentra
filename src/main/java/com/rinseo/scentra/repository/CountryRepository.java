@@ -1,4 +1,4 @@
-package com.rinseo.scentra.service;
+package com.rinseo.scentra.repository;
 
 import com.rinseo.scentra.model.Country;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -3,7 +3,7 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.exception.CountryNotFoundException;
 import com.rinseo.scentra.model.Country;
 import com.rinseo.scentra.model.dto.CountryDTO;
-import com.rinseo.scentra.service.CountryRepository;
+import com.rinseo.scentra.repository.CountryRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

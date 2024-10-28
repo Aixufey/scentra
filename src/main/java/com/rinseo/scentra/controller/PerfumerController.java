@@ -3,7 +3,7 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.exception.PerfumerNotFoundException;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
-import com.rinseo.scentra.service.PerfumerRepository;
+import com.rinseo.scentra.repository.PerfumerRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

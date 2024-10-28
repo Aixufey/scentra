@@ -3,7 +3,7 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.exception.BrandNotFoundException;
 import com.rinseo.scentra.model.Brand;
 import com.rinseo.scentra.model.dto.BrandDTO;
-import com.rinseo.scentra.service.BrandRepository;
+import com.rinseo.scentra.repository.BrandRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

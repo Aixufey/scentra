@@ -3,7 +3,7 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.exception.AccordNotFoundException;
 import com.rinseo.scentra.model.Accord;
 import com.rinseo.scentra.model.dto.AccordDTO;
-import com.rinseo.scentra.service.AccordRepository;
+import com.rinseo.scentra.repository.AccordRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

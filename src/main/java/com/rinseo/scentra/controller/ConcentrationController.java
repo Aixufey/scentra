@@ -3,7 +3,7 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.exception.ConcentrationNotFoundException;
 import com.rinseo.scentra.model.Concentration;
 import com.rinseo.scentra.model.dto.ConcentrationDTO;
-import com.rinseo.scentra.service.ConcentrationRepository;
+import com.rinseo.scentra.repository.ConcentrationRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

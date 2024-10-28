@@ -3,7 +3,7 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.exception.NoteNotFoundException;
 import com.rinseo.scentra.model.Note;
 import com.rinseo.scentra.model.dto.NoteDTO;
-import com.rinseo.scentra.service.NoteRepository;
+import com.rinseo.scentra.repository.NoteRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RequestMapping("/api/v1")
 @AllArgsConstructor

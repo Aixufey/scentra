@@ -3,7 +3,7 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.exception.CompanyNotFoundException;
 import com.rinseo.scentra.model.Company;
 import com.rinseo.scentra.model.dto.CompanyDTO;
-import com.rinseo.scentra.service.CompanyRepository;
+import com.rinseo.scentra.repository.CompanyRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
