@@ -1,9 +1,8 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.exception.CompanyNotFoundException;
 import com.rinseo.scentra.model.Company;
 import com.rinseo.scentra.model.dto.CompanyDTO;
-import com.rinseo.scentra.repository.CompanyRepository;
+import com.rinseo.scentra.service.CompanyServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,48 +16,47 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class CompanyController {
-    private final CompanyRepository repo;
+    private final CompanyServiceImpl service;
 
     @GetMapping("/companies")
     public List<Company> getAllCompanies() {
-        return repo.findAll();
+        return service.getAll();
     }
 
     @GetMapping("/companies/{id}")
     public Company getCompanyById(@PathVariable long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException("Company with id " + id + " not found"));
+        return service.getById(id);
     }
 
     @PutMapping("/companies/{id}")
     public ResponseEntity<CompanyDTO> update(@PathVariable long id, @Valid @RequestBody CompanyDTO company) {
-        Company foundCompany = repo.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException("Company with id " + id + " not found"));
-        foundCompany.setName(company.name());
+        CompanyDTO companyDTO = service.update(id, company);
 
-        Company updatedCompany = repo.saveAndFlush(foundCompany);
-
-        return ResponseEntity.ok(new CompanyDTO(updatedCompany.getName()));
+        return ResponseEntity
+                .ok(companyDTO);
     }
 
     @PostMapping("/companies")
-    public ResponseEntity<Company> create(@Valid @RequestBody Company company) {
-        Company savedCompany = repo.saveAndFlush(company);
+    public ResponseEntity<CompanyDTO> create(@Valid @RequestBody CompanyDTO company) {
+        CompanyDTO companyDTO = service.create(company);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedCompany.getId())
+                .buildAndExpand(companyDTO.id())
                 .toUri();
 
         return ResponseEntity
                 .created(location)
-                .body(savedCompany);
+                .body(companyDTO);
     }
 
     @DeleteMapping("/companies/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        repo.deleteById(id);
-        return ResponseEntity.noContent().build();
+        service.delete(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
