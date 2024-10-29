@@ -5,7 +5,7 @@ import com.rinseo.scentra.model.dto.NoteDTO;
 import com.rinseo.scentra.service.NoteServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,9 +22,11 @@ public class NoteController {
     // Example: 30 items, 5 items per page -> 6 pages
     // /notes?page=0&size=5
     // Max size is 20 items per page enforced by the controller
+    // https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables
+    // Spring recommends using PagedModel instead of Page to structure JSON response as Page
     @GetMapping("/notes")
-    public Page<Note> getNotes(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
-        return service.getAll(page, size);
+    public PagedModel<Note> getNotes(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        return new PagedModel<>(service.getAll(page, size));
     }
 
     @GetMapping("/notes/{id}")
