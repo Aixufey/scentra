@@ -1,9 +1,8 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.exception.BrandNotFoundException;
 import com.rinseo.scentra.model.Brand;
 import com.rinseo.scentra.model.dto.BrandDTO;
-import com.rinseo.scentra.repository.BrandRepository;
+import com.rinseo.scentra.service.BrandServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,47 +16,44 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class BrandController {
-    private final BrandRepository repo;
+    private final BrandServiceImpl service;
 
     @GetMapping("/brands")
     public List<Brand> getAllBrands() {
-        return repo.findAll();
+        return service.getAll();
     }
 
     @GetMapping("/brands/{id}")
     public Brand getBrandById(@PathVariable Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new BrandNotFoundException("Brand by id " + id + " was not found"));
+        return service.getById(id);
     }
 
     @PutMapping("/brands/{id}")
     public ResponseEntity<BrandDTO> update(@PathVariable long id, @Valid @RequestBody BrandDTO brand) {
-        Brand foundBrand = repo.findById(id)
-                .orElseThrow(() -> new BrandNotFoundException("Brand by id " + id + " was not found"));
-        foundBrand.setName(brand.name());
+        BrandDTO brandDTO = service.update(id, brand);
 
-        Brand updatedBrand = repo.saveAndFlush(foundBrand);
-        return ResponseEntity.ok(new BrandDTO(updatedBrand.getName()));
+        return ResponseEntity
+                .ok(brandDTO);
     }
 
     @PostMapping("/brands")
-    public ResponseEntity<Brand> create(@Valid @RequestBody Brand brand) {
-        Brand newBrand = repo.saveAndFlush(brand);
+    public ResponseEntity<BrandDTO> create(@Valid @RequestBody BrandDTO brand) {
+        BrandDTO brandDTO = service.create(brand);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(newBrand.getId())
+                .buildAndExpand(brandDTO.id())
                 .toUri();
 
         return ResponseEntity
                 .created(location)
-                .body(newBrand);
+                .body(brandDTO);
     }
 
     @DeleteMapping("/brands/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        repo.deleteById(id);
+        service.delete(id);
 
         return ResponseEntity
                 .noContent()

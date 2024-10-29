@@ -46,6 +46,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void delete(long id) {
-
+        repo.deleteById(id);
     }
 }
