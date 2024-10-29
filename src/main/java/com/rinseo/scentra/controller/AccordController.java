@@ -1,9 +1,8 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.exception.AccordNotFoundException;
 import com.rinseo.scentra.model.Accord;
 import com.rinseo.scentra.model.dto.AccordDTO;
-import com.rinseo.scentra.repository.AccordRepository;
+import com.rinseo.scentra.service.AccordServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,48 +16,47 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class AccordController {
-    private final AccordRepository repo;
+    private final AccordServiceImpl service;
 
     @GetMapping("/accords")
     public List<Accord> getAllAccords() {
-        return repo.findAll();
+        return service.getAll();
     }
 
     @GetMapping("/accords/{id}")
     public Accord getAccordById(@PathVariable long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new AccordNotFoundException("Accord not found with id: " + id));
+        return service.getById(id);
     }
 
     @PutMapping("/accords/{id}")
     public ResponseEntity<AccordDTO> update(@PathVariable long id, @Valid @RequestBody AccordDTO accord) {
-        Accord foundAccord = repo.findById(id)
-                .orElseThrow(() -> new AccordNotFoundException("Accord not found with id: " + id));
+        AccordDTO accordDTO = service.update(id, accord);
 
-        foundAccord.setName(accord.name());
-        foundAccord.setDescription(accord.description());
-        Accord updatedAccord = repo.saveAndFlush(foundAccord);
-
-        return ResponseEntity.ok(new AccordDTO(updatedAccord.getName(), updatedAccord.getDescription()));
+        return ResponseEntity
+                .ok(accordDTO);
     }
 
     @PostMapping("/accords")
-    public ResponseEntity<Accord> create(@Valid @RequestBody Accord accord) {
-        Accord savedAccord = repo.saveAndFlush(accord);
+    public ResponseEntity<AccordDTO> create(@Valid @RequestBody AccordDTO accord) {
+        AccordDTO accordDTO = service.create(accord);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedAccord.getId())
+                .buildAndExpand(accordDTO.id())
                 .toUri();
+
         return ResponseEntity
                 .created(location)
-                .body(savedAccord);
+                .body(accordDTO);
     }
 
     @DeleteMapping("/accords/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        repo.deleteById(id);
-        return ResponseEntity.noContent().build();
+        service.delete(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
