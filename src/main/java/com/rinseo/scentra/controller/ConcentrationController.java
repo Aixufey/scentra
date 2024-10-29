@@ -1,9 +1,8 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.exception.ConcentrationNotFoundException;
 import com.rinseo.scentra.model.Concentration;
 import com.rinseo.scentra.model.dto.ConcentrationDTO;
-import com.rinseo.scentra.repository.ConcentrationRepository;
+import com.rinseo.scentra.service.ConcentrationServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,49 +16,47 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class ConcentrationController {
-    private final ConcentrationRepository repo;
+    private final ConcentrationServiceImpl service;
 
     @GetMapping("/concentrations")
     public List<Concentration> getAllConcentrations() {
-        return repo.findAll();
+        return service.getAll();
     }
 
     @GetMapping("/concentrations/{id}")
     public Concentration getConcentrationById(@PathVariable Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new ConcentrationNotFoundException("Concentration with id " + id + " not found"));
+        return service.getById(id);
     }
 
     @PutMapping("/concentrations/{id}")
     public ResponseEntity<ConcentrationDTO> update(@PathVariable long id, @Valid @RequestBody ConcentrationDTO concentration) {
-        Concentration foundConcentration = repo.findById(id)
-                .orElseThrow(() -> new ConcentrationNotFoundException("Concentration with id " + id + " not found"));
-        foundConcentration.setName(concentration.name());
-        foundConcentration.setDescription(concentration.description());
+        ConcentrationDTO concentrationDTO = service.update(id, concentration);
 
-        Concentration updatedConcentration = repo.saveAndFlush(foundConcentration);
-
-        return ResponseEntity.ok(new ConcentrationDTO(updatedConcentration.getName(), updatedConcentration.getDescription()));
+        return ResponseEntity
+                .ok(concentrationDTO);
     }
 
     @PostMapping("/concentrations")
-    public ResponseEntity<Concentration> create(@Valid @RequestBody Concentration concentration) {
-        Concentration savedConcentration = repo.saveAndFlush(concentration);
+    public ResponseEntity<ConcentrationDTO> create(@Valid @RequestBody ConcentrationDTO concentration) {
+        ConcentrationDTO concentrationDTO = service.create(concentration);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedConcentration.getId())
+                .buildAndExpand(concentrationDTO.id())
                 .toUri();
 
         return ResponseEntity
                 .created(location)
-                .body(savedConcentration);
+                .body(concentrationDTO);
     }
 
     @DeleteMapping("/concentrations/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        repo.deleteById(id);
-        return ResponseEntity.noContent().build();
+        service.delete(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
