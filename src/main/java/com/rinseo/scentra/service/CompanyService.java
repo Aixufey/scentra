@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface CompanyService {
     List<Company> getAll();
+
     Company getById(long id);
+
     CompanyDTO create(CompanyDTO company);
+
     CompanyDTO update(long id, CompanyDTO company);
+
     void delete(long id);
 }

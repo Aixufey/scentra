@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface ConcentrationService {
     List<Concentration> getAll();
+
     Concentration getById(long id);
+
     ConcentrationDTO create(ConcentrationDTO concentration);
+
     ConcentrationDTO update(long id, ConcentrationDTO concentration);
+
     void delete(long id);
 }
