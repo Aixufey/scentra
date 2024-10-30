@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BrandServiceImpl implements BrandService {
     private final BrandRepository repo;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<Brand> getAll() {
@@ -38,7 +39,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public BrandDTO create(BrandDTO brand) {
-        Brand brandEntity = new ModelMapper().map(brand, Brand.class);
+        Brand brandEntity = modelMapper.map(brand, Brand.class);
         Brand savedBrand = repo.saveAndFlush(brandEntity);
 
         return new BrandDTO(savedBrand.getId(), savedBrand.getName());

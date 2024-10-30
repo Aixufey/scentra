@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class NoteServiceImpl implements NoteService {
     private final NoteRepository repo;
+    private final ModelMapper modelMapper;
 
     @Override
     public Page<Note> getAll(int page, int size) {
@@ -32,7 +33,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public NoteDTO create(NoteDTO note) {
-        Note noteEntity = new ModelMapper().map(note, Note.class);
+        Note noteEntity = modelMapper.map(note, Note.class);
         Note savedNote = repo.saveAndFlush(noteEntity);
 
         return new NoteDTO(savedNote.getId(), savedNote.getName(), savedNote.getDescription());

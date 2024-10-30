@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AccordServiceImpl implements AccordService {
     private final AccordRepository repo;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<Accord> getAll() {
@@ -28,7 +29,7 @@ public class AccordServiceImpl implements AccordService {
 
     @Override
     public AccordDTO create(AccordDTO accord) {
-        Accord accordEntity = new ModelMapper().map(accord, Accord.class);
+        Accord accordEntity = modelMapper.map(accord, Accord.class);
         Accord savedAccord = repo.saveAndFlush(accordEntity);
 
         return new AccordDTO(savedAccord.getId(), savedAccord.getName(), savedAccord.getDescription());

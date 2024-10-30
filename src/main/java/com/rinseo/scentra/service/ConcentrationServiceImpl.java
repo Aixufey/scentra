@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ConcentrationServiceImpl implements ConcentrationService {
     private final ConcentrationRepository repo;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<Concentration> getAll() {
@@ -28,7 +29,7 @@ public class ConcentrationServiceImpl implements ConcentrationService {
 
     @Override
     public ConcentrationDTO create(ConcentrationDTO concentration) {
-        Concentration concentrationEntity = new ModelMapper().map(concentration, Concentration.class);
+        Concentration concentrationEntity = modelMapper.map(concentration, Concentration.class);
         Concentration savedConcentration = repo.saveAndFlush(concentrationEntity);
 
         return new ConcentrationDTO(

@@ -14,6 +14,7 @@ import java.util.List;
 @Service
 public class CountryServiceImpl implements CountryService {
     private final CountryRepository repo;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<Country> getAll() {
@@ -43,7 +44,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public CountryDTO create(CountryDTO country) {
-        Country countryEntity = new ModelMapper().map(country, Country.class);
+        Country countryEntity = modelMapper.map(country, Country.class);
         Country savedCountry = repo.saveAndFlush(countryEntity);
 
         return new CountryDTO(savedCountry.getId(), savedCountry.getName());

@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository repo;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<Company> getAll() {
@@ -28,7 +29,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDTO create(CompanyDTO company) {
-        Company companyEntity = new ModelMapper().map(company, Company.class);
+        Company companyEntity = modelMapper.map(company, Company.class);
         Company savedCompany = repo.saveAndFlush(companyEntity);
 
         return new CompanyDTO(savedCompany.getId(), savedCompany.getName());
