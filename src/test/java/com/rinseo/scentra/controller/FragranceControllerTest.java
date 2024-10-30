@@ -22,6 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 
+// This annotation will only scan for web layer components such as Controller and load into the Spring context
+// If Spring Security is enabled, it will be excluded with excludeAutoConfiguration
 @WebMvcTest(controllers = FragranceController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 @MockBean({FragranceServiceV2Impl.class})
 class FragranceControllerTest {
@@ -38,8 +40,10 @@ class FragranceControllerTest {
         FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2027);
         Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
+        // Integration test with service layer, the service layer is mocked
         when(service.create(any(FragranceDTO.class))).thenReturn(fragranceDTO);
 
+        // Testing with MockMvc with a POST request
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/fragrances")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

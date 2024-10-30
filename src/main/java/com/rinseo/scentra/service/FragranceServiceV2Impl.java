@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class FragranceServiceV2Impl implements FragranceServiceV2 {
     private final FragranceRepository repo;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<Fragrance> getAll() {
@@ -33,7 +34,7 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
     @Override
     public FragranceDTO create(FragranceDTO fragrance) {
         // Convert DTO to Entity
-        Fragrance fragranceEntity = new ModelMapper().map(fragrance, Fragrance.class);
+        Fragrance fragranceEntity = modelMapper.map(fragrance, Fragrance.class);
         Fragrance savedFragrance = repo.saveAndFlush(fragranceEntity);
 
         return new FragranceDTO(savedFragrance.getId(), savedFragrance.getName(), savedFragrance.getYear());
