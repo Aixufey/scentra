@@ -8,12 +8,14 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
+@Table(name = "fragrance")
 public class Fragrance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fragrance_id")
     private Long id;
     @NotBlank(message = "Fragrance name is required.")
+    @Column(unique = true)
     private String name;
     @Min(value = 1900, message = "Year must be greater than 1900.")
     @Max(value = 2025, message = "Year must be less than 2026.")
