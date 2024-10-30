@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PerfumerServiceImpl implements PerfumerService {
     private final PerfumerRepository repo;
-
+    private final ModelMapper modelMapper;
     @Override
     public List<Perfumer> getAll() {
         return repo.findAll();
@@ -32,7 +32,7 @@ public class PerfumerServiceImpl implements PerfumerService {
 
     @Override
     public PerfumerDTO create(PerfumerDTO perfumer) {
-        Perfumer perfumerEntity = new ModelMapper().map(perfumer, Perfumer.class);
+        Perfumer perfumerEntity = modelMapper.map(perfumer, Perfumer.class);
         Perfumer savedPerfumer = repo.saveAndFlush(perfumerEntity);
 
         return new PerfumerDTO(savedPerfumer.getId(), savedPerfumer.getName());
