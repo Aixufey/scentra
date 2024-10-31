@@ -1,18 +1,14 @@
 package com.rinseo.scentra.repository;
 
 import com.rinseo.scentra.model.Fragrance;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.util.Assert;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @TestPropertySource(properties = "spring.sql.init.mode=never")
 class FragranceRepositoryTest {
