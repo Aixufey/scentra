@@ -1,15 +1,23 @@
 package com.rinseo.scentra.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "fragrance")
-public class Fragrance {
+@JsonIgnoreProperties(value = {"perfumers", "concentrations", "notes"})
+public class Fragrance implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fragrance_id")
@@ -21,34 +29,36 @@ public class Fragrance {
     @Max(value = 2025, message = "Year must be less than 2026.")
     @Column(name = "\"year\"")
     private int year;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "brand_id")
     private Brand brand;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "country_id")
     private Country country;
-    @ManyToMany
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "fragrance_perfumer",
             joinColumns = @JoinColumn(name = "fragrance_id"),
             inverseJoinColumns = @JoinColumn(name = "perfumer_id")
     )
-    private Set<Perfumer> perfumers;
-    @ManyToMany
+    private Set<Perfumer> perfumers = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "fragrance_concentration",
             joinColumns = @JoinColumn(name = "fragrance_id"),
             inverseJoinColumns = @JoinColumn(name = "concentration_id")
     )
-    private Set<Concentration> concentrations;
+    private Set<Concentration> concentrations = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "fragrance_notes",
             joinColumns = @JoinColumn(name = "fragrance_id"),
             inverseJoinColumns = @JoinColumn(name = "note_id")
     )
-    private Set<Note> notes;
+    private Set<Note> notes = new HashSet<>();
 
     public Fragrance() {
     }
@@ -129,6 +139,8 @@ public class Fragrance {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", year=" + year +
+                ", brand=" + brand +
+                ", country=" + country +
                 '}';
     }
 }
