@@ -1,6 +1,5 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
 import org.json.JSONException;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -20,6 +18,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // Testcontainer manages the lifecycle of services inside Docker containers annotated with @Container
 // It integrates with JUnit and will spin up Postgres container before the test starts
@@ -97,10 +97,10 @@ class FragranceControllerWithTestcontainersTest {
         HttpHeaders header = createdEntity.getHeaders();
 
         // Assert
-        Assertions.assertEquals(HttpStatus.CREATED, statusCode);
-        Assertions.assertEquals("Acqua di Giò Profumo", fragranceDetails.name()
+        assertEquals(HttpStatus.CREATED, statusCode);
+        assertEquals("Acqua di Giò Profumo", fragranceDetails.name()
                 , "Fragrance name should be Acqua di Giò Profumo");
-        Assertions.assertEquals(MediaType.APPLICATION_JSON, header.getContentType());
+        assertEquals(MediaType.APPLICATION_JSON, header.getContentType());
     }
 
     @Order(2)
@@ -127,7 +127,7 @@ class FragranceControllerWithTestcontainersTest {
         PerfumerDTO perfumerDetails = createdEntity.getBody();
 
         // Assert
-        Assertions.assertEquals(HttpStatus.CREATED, statusCode);
-        Assertions.assertEquals(perfumerDetails.name(), "Alberto Morillas");
+        assertEquals(HttpStatus.CREATED, statusCode);
+        assertEquals(perfumerDetails.name(), "Alberto Morillas");
     }
 }
