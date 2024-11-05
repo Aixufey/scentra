@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class NoteServiceImpl implements NoteService {
@@ -23,6 +25,11 @@ public class NoteServiceImpl implements NoteService {
             size = maxSize;
         }
         return repo.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public List<Note> getAll() {
+        return repo.findAll();
     }
 
     @Override

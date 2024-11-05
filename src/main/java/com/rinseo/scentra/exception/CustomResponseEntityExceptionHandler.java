@@ -24,6 +24,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // Unique constraint violation exception handler
+    @ExceptionHandler(UniqueViolationException.class)
+    public final ResponseEntity<ErrorDetails> handleUniqueViolationException(UniqueViolationException ex, WebRequest request) throws Exception {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(FragranceNotFoundException.class)
     public final ResponseEntity<ErrorDetails> handleFragranceNotFoundException(FragranceNotFoundException ex, WebRequest request) throws Exception {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));

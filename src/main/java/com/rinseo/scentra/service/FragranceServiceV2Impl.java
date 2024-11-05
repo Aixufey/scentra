@@ -1,6 +1,7 @@
 package com.rinseo.scentra.service;
 
 import com.rinseo.scentra.exception.FragranceNotFoundException;
+import com.rinseo.scentra.exception.UniqueViolationException;
 import com.rinseo.scentra.model.*;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.repository.FragranceRepository;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -40,24 +44,97 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
 
     @Override
     @Transactional
-    public FragranceDTO create(FragranceDTO fragrance) {
+    public Fragrance create(FragranceDTO fragrance) {
         // Convert DTO to Entity
         Fragrance fragranceEntity = modelMapper.map(fragrance, Fragrance.class);
-        Fragrance savedFragrance = repo.saveAndFlush(fragranceEntity);
+        Fragrance byName = repo.findByName(fragrance.name());
 
-        return new FragranceDTO(savedFragrance.getId(), savedFragrance.getName(), savedFragrance.getYear());
+        if (byName != null) {
+            throw new UniqueViolationException("Fragrance with name: " + fragrance.name() + " already exists");
+        }
+
+        updateMetadata(fragranceEntity, fragrance);
+
+        return repo.saveAndFlush(fragranceEntity);
+    }
+
+    /**
+     * Update entity if the DTO contains the metadata.
+     *
+     * @param entity       The entity to update
+     * @param fragranceDTO The DTO containing the metadata
+     */
+    private void updateMetadata(Fragrance entity, FragranceDTO fragranceDTO) {
+        if (fragranceDTO.brandId() != null) {
+            Brand brand = brandService.getById(fragranceDTO.brandId());
+            entity.setBrand(brand);
+        }
+        if (fragranceDTO.countryId() != null) {
+            Country country = countryService.getById(fragranceDTO.countryId());
+            entity.setCountry(country);
+        }
+        if (fragranceDTO.perfumerIds() != null) {
+            Set<Perfumer> matching = getPerfumers(fragranceDTO);
+            entity.setPerfumers(matching);
+        }
+        if (fragranceDTO.noteIds() != null) {
+            Set<Note> matching = getNotes(fragranceDTO);
+            entity.setNotes(matching);
+        }
+        if (fragranceDTO.concentrationIds() != null) {
+            Set<Concentration> matching = getConcentrations(fragranceDTO);
+            entity.setConcentrations(matching);
+        }
+    }
+
+    /**
+     * Generic method to get entities by their ids from a service then filter out the nulls.
+     *
+     * @param service The service to use to get the entity
+     * @param ids     Set of ids
+     * @param <T>     The type of entity
+     * @return Set of entities
+     */
+    private <T> Set<T> getEntities(Function<Long, T> service, Set<Long> ids) {
+        /*
+        * A refactored version of the above
+        * Set<Long> ids = entity.getIds();
+        Set<Perfumer> matching = xyzService
+                .getAll()
+                .stream()
+                .filter(e -> ids.contains(e.getId()))
+                .collect(Collectors.toSet());
+        return matching;
+        * */
+        return ids.stream()
+                .map(service)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Note> getNotes(FragranceDTO fragrance) {
+        return getEntities(noteService::getById, fragrance.noteIds());
+    }
+
+    private Set<Concentration> getConcentrations(FragranceDTO fragrance) {
+        return getEntities(concentrationService::getById, fragrance.concentrationIds());
+    }
+
+    private Set<Perfumer> getPerfumers(FragranceDTO fragrance) {
+        return getEntities(perfumerService::getById, fragrance.perfumerIds());
     }
 
     @Override
     @Transactional
-    public FragranceDTO update(long id, FragranceDTO fragrance) {
+    public Fragrance update(long id, FragranceDTO fragrance) {
         Fragrance foundFragrance = repo.findById(id)
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
         foundFragrance.setName(fragrance.name());
         foundFragrance.setYear(fragrance.year());
-        Fragrance updatedFragrance = repo.saveAndFlush(foundFragrance);
 
-        return new FragranceDTO(updatedFragrance.getId(), updatedFragrance.getName(), updatedFragrance.getYear());
+        updateMetadata(foundFragrance, fragrance);
+
+        return repo.saveAndFlush(foundFragrance);
     }
 
     @Override
@@ -66,6 +143,9 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
         repo.deleteById(id);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // BrandRelationService
+    ///////////////////////////////////////////////////////////////////////////
     @Override
     @Transactional
     public Fragrance updateBrandRelation(long fragranceId, long brandId) {
@@ -87,6 +167,10 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
         repo.saveAndFlush(fragrance);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // CountryRelationService
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override
     @Transactional
     public Fragrance updateCountryRelation(long fragranceId, long countryId) {
@@ -107,6 +191,10 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
 
         repo.saveAndFlush(fragrance);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // PerfumerRelationService
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public List<Perfumer> getPerfumersRelation(long fragranceId) {
@@ -143,6 +231,10 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
         repo.saveAndFlush(fragrance);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // ConcentrationRelationService
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override
     public List<Concentration> getConcentrationsRelation(long fragranceId) {
         Fragrance fragrance = getById(fragranceId);
@@ -177,6 +269,10 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
 
         repo.saveAndFlush(fragrance);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // NoteRelationService
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public List<Note> getNotesRelation(long fragranceId) {

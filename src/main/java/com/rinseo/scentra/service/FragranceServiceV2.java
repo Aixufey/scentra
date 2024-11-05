@@ -18,9 +18,9 @@ public interface FragranceServiceV2 extends
 
     List<Fragrance> getByName(String name);
 
-    FragranceDTO create(FragranceDTO fragrance);
+    Fragrance create(FragranceDTO fragrance);
 
-    FragranceDTO update(long id, FragranceDTO fragrance);
+    Fragrance update(long id, FragranceDTO fragrance);
 
     void deleteById(long id);
 }
