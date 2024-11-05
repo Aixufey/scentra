@@ -5,8 +5,9 @@ import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.Note;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.FragranceDTO;
-import com.rinseo.scentra.service.FragranceServiceV2;
+import com.rinseo.scentra.service.FragranceServiceV2Impl;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +18,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class FragranceController {
-    private final FragranceServiceV2 service;
+    private final FragranceServiceV2Impl service;
 
     @Autowired
-    public FragranceController(FragranceServiceV2 service) {
+    public FragranceController(FragranceServiceV2Impl service) {
         this.service = service;
     }
 
@@ -35,22 +37,28 @@ public class FragranceController {
         return ResponseEntity.ok(service.getById(id));
     }
 
-    @GetMapping("/v1/fragrances/name/{name}")
-    public ResponseEntity<List<Fragrance>> getByName(@PathVariable String name) {
-        return ResponseEntity.ok(service.getByName(name));
+    @GetMapping("/v1/fragrances/query")
+    public ResponseEntity<List<Fragrance>> getByName(@RequestParam(required = false) String name) {
+        if (name != null) {
+            String sanitizedName = name.replaceAll("[^a-zA-Z0-9 ]", "");
+            log.info("Sanitized name: {}", sanitizedName);
+            return ResponseEntity.ok(service.getByName(sanitizedName));
+        } else {
+            return ResponseEntity.ok(service.getAll());
+        }
     }
 
     /**
      * Posting does not work with H2 because of returning the generated id is not supported.
      */
     @PostMapping("/v1/fragrances")
-    public ResponseEntity<FragranceDTO> save(@Valid @RequestBody FragranceDTO fragrance) {
-        FragranceDTO fragranceDTO = service.create(fragrance);
+    public ResponseEntity<Fragrance> save(@Valid @RequestBody FragranceDTO fragrance) {
+        Fragrance fragranceDTO = service.create(fragrance);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(fragranceDTO.id())
+                .buildAndExpand(fragranceDTO.getId())
                 .toUri();
 
         return ResponseEntity
@@ -59,8 +67,8 @@ public class FragranceController {
     }
 
     @PutMapping("/v1/fragrances/{id}")
-    public ResponseEntity<FragranceDTO> update(@PathVariable long id, @Valid @RequestBody FragranceDTO fragrance) {
-        FragranceDTO fragranceDTO = service.update(id, fragrance);
+    public ResponseEntity<Fragrance> update(@PathVariable long id, @Valid @RequestBody FragranceDTO fragrance) {
+        Fragrance fragranceDTO = service.update(id, fragrance);
 
         return ResponseEntity.ok(fragranceDTO);
     }
