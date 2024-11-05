@@ -41,7 +41,7 @@ class FragranceControllerTest {
         Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
         // Integration test with service layer, the service layer is mocked
-        when(service.create(any(FragranceDTO.class))).thenReturn(fragranceDTO);
+        when(service.create(any(FragranceDTO.class))).thenReturn(fragranceRequest);
 
         // Testing with MockMvc with a POST request
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/fragrances")
@@ -71,7 +71,7 @@ class FragranceControllerTest {
         FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2027);
         Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
-        when(service.create(any(FragranceDTO.class))).thenReturn(fragranceDTO);
+        when(service.create(any(FragranceDTO.class))).thenReturn(fragranceRequest);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/fragrances")
                 .contentType(MediaType.APPLICATION_JSON)
