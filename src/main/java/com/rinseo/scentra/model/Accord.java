@@ -20,6 +20,7 @@ public class Accord implements Serializable {
     @Column(name = "accord_id")
     private Long id;
     @NotBlank(message = "Accord name is required.")
+    @Column(unique = true)
     private String name;
     private String description;
 

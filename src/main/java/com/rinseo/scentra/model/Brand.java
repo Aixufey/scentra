@@ -23,6 +23,7 @@ public class Brand implements Serializable {
     @Column(name = "brand_id")
     private Long id;
     @NotBlank(message = "Brand name is required.")
+    @Column(unique = true)
     private String name;
     @ManyToOne
     @JoinColumn(name = "country_id")

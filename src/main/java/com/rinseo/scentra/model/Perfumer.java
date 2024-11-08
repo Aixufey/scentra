@@ -24,6 +24,7 @@ public class Perfumer implements Serializable {
     @Column(name = "perfumer_id")
     private Long id;
     @NotBlank(message = "Perfumer name is required.")
+    @Column(unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "perfumers", fetch = FetchType.LAZY)

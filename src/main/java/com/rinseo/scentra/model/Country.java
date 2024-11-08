@@ -20,6 +20,7 @@ public class Country implements Serializable {
     @Column(name = "country_id")
     private Long id;
     @Size(min = 4, message = "Country name must be at least 4 characters long.")
+    @Column(unique = true)
     private String name;
 
     public Country(String name) {

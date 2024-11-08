@@ -23,6 +23,7 @@ public class Concentration implements Serializable {
     @Column(name = "concentration_id")
     private Long id;
     @NotBlank(message = "Concentration name is required.")
+    @Column(unique = true)
     private String name;
     private String description;
 

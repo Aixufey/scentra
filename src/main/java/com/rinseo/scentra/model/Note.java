@@ -23,6 +23,7 @@ public class Note implements Serializable {
     @Column(name = "note_id")
     private Long id;
     @NotBlank(message = "Note name is required.")
+    @Column(unique = true)
     private String name;
     private String description;
     @ManyToOne

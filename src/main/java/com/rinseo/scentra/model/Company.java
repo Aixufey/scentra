@@ -20,6 +20,7 @@ public class Company implements Serializable {
     @Column(name = "company_id")
     private Long id;
     @NotBlank(message = "Company name is required.")
+    @Column(unique = true)
     private String name;
     @ManyToOne
     @JoinColumn(name = "country_id")
