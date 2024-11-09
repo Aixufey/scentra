@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
+@ToString(exclude = {"fragrances", "brands"})
 public class Perfumer implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
