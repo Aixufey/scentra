@@ -4,6 +4,7 @@ import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
 import com.rinseo.scentra.service.PerfumerServiceImpl;
+import com.rinseo.scentra.service.perfumer.PerfumerFragranceServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 public class PerfumerController {
     private PerfumerServiceImpl service;
+    private PerfumerFragranceServiceImpl perfumerFragranceService;
 
     @GetMapping("/perfumers")
     public ResponseEntity<List<Perfumer>> getAllPerfumers() {
@@ -77,22 +79,22 @@ public class PerfumerController {
     }
 
     @GetMapping("/perfumers/{id}/fragrances")
-    public ResponseEntity<List<Fragrance>> getFragranceRelation(@PathVariable long id) {
-        List<Fragrance> fragrancesRelation = service.getFragrancesRelation(id);
+    public ResponseEntity<List<Fragrance>> getPerfumerFragrances(@PathVariable long id) {
+        List<Fragrance> fragrancesRelation = perfumerFragranceService.getAll(id);
         return ResponseEntity.ok(fragrancesRelation);
 
     }
 
     @PutMapping("/perfumers/{id}/fragrances/{fragranceId}")
-    public ResponseEntity<List<Fragrance>> updateFragranceRelation(@PathVariable long id, @PathVariable long fragranceId) {
-        List<Fragrance> fragrancesRelation = service.updateFragranceRelation(id, fragranceId);
+    public ResponseEntity<List<Fragrance>> updatePerfumerFragrance(@PathVariable long id, @PathVariable long fragranceId) {
+        List<Fragrance> fragrancesRelation = perfumerFragranceService.updateFragrance(id, fragranceId);
 
         return ResponseEntity.ok(fragrancesRelation);
     }
 
     @DeleteMapping("/perfumers/{id}/fragrances/{fragranceId}")
     public ResponseEntity<Void> deleteFragranceRelation(@PathVariable long id, @PathVariable long fragranceId) {
-        service.deleteFragranceRelation(id, fragranceId);
+        perfumerFragranceService.deleteFragrance(id, fragranceId);
 
         return ResponseEntity
                 .noContent()
