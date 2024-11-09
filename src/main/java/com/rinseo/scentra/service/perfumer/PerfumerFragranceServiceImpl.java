@@ -35,25 +35,45 @@ public class PerfumerFragranceServiceImpl implements PerfumerFragranceService {
         return List.copyOf(perfumer.getFragrances());
     }
 
+
+    /**
+     * Batch update the list of fragrances associated with a perfumer.
+     *
+     * @param perfumerId   The ID of the perfumer
+     * @param fragranceIds List of fragrance IDs to associate with the perfumer
+     * @return Perfumer's updated list of fragrances
+     */
     @Override
     @Transactional
-    public List<Fragrance> updateFragrance(long perfumerId, long fragranceId) {
+    public List<Fragrance> updateFragrances(long perfumerId, List<Long> fragranceIds) {
         // Find perfumer
         Perfumer perfumer = getPerfumer(perfumerId);
-        // Find fragrance
-        Fragrance fragrance = getFragrance(fragranceId);
-        // Inverse side: Add found fragrance to perfumer's collection
+
+        // Validate fragrance IDs
+        for (Long id : fragranceIds) {
+            if (id == null || id <= 0) {
+                throw new IllegalArgumentException("Invalid fragrance ID: " + id);
+            }
+        }
+
+        // Find all fragrances by IDs
+        List<Fragrance> foundFragrances = fragranceRepository.findAllById(fragranceIds);
+
+        // Inverse side: Add found fragrances to perfumer's collection
         Set<Fragrance> fragrances = perfumer.getFragrances();
-        fragrances.add(fragrance);
+        fragrances.addAll(foundFragrances);
         perfumer.setFragrances(fragrances);
-        // Owner side: Add perfumer to fragrance's collection
-        Set<Perfumer> perfumers = fragrance.getPerfumers();
-        perfumers.add(perfumer);
-        fragrance.setPerfumers(perfumers);
+
+        // Owner side: Add perfumer to each fragrance's collection
+        for (var fragrance : foundFragrances) {
+            Set<Perfumer> perfumers = fragrance.getPerfumers();
+            perfumers.add(perfumer);
+            fragrance.setPerfumers(perfumers);
+        }
 
         // Save changes on both sides to persist the relationship
         perfumerRepository.saveAndFlush(perfumer);
-        fragranceRepository.saveAndFlush(fragrance);
+        fragranceRepository.saveAll(foundFragrances);
 
         return List.copyOf(perfumer.getFragrances());
     }

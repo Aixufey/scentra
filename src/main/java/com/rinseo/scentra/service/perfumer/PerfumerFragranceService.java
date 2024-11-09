@@ -7,7 +7,7 @@ import java.util.List;
 public interface PerfumerFragranceService {
     List<Fragrance> getAll(long perfumerId);
 
-    List<Fragrance> updateFragrance(long perfumerId, long fragranceId);
+    List<Fragrance> updateFragrances(long perfumerId, List<Long> fragranceIds);
 
     void deleteFragrance(long perfumerId, long fragranceId);
 }

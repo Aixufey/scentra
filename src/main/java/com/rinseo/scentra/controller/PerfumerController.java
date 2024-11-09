@@ -78,6 +78,7 @@ public class PerfumerController {
                 .build();
     }
 
+    /////////////////////////// FRAGRANCE INVERSE RELATIONSHIP ///////////////////////////
     @GetMapping("/perfumers/{id}/fragrances")
     public ResponseEntity<List<Fragrance>> getPerfumerFragrances(@PathVariable long id) {
         List<Fragrance> fragrancesRelation = perfumerFragranceService.getAll(id);
@@ -85,11 +86,11 @@ public class PerfumerController {
 
     }
 
-    @PutMapping("/perfumers/{id}/fragrances/{fragranceId}")
-    public ResponseEntity<List<Fragrance>> updatePerfumerFragrance(@PathVariable long id, @PathVariable long fragranceId) {
-        List<Fragrance> fragrancesRelation = perfumerFragranceService.updateFragrance(id, fragranceId);
+    @PutMapping("/perfumers/{id}/fragrances")
+    public ResponseEntity<List<Fragrance>> updatePerfumerFragrances(@PathVariable long id, @RequestBody List<Long> fragranceIds) {
+        List<Fragrance> fragrances = perfumerFragranceService.updateFragrances(id, fragranceIds);
 
-        return ResponseEntity.ok(fragrancesRelation);
+        return ResponseEntity.ok(fragrances);
     }
 
     @DeleteMapping("/perfumers/{id}/fragrances/{fragranceId}")
