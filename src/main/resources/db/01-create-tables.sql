@@ -22,7 +22,7 @@ CREATE TABLE company
     company_id SERIAL PRIMARY KEY,
     name       TEXT NOT NULL UNIQUE,
     country_id INT,
-    FOREIGN KEY (country_id) REFERENCES country (country_id)
+    FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE SET NULL
 );
 
 CREATE TABLE brand
@@ -31,7 +31,7 @@ CREATE TABLE brand
     name       TEXT NOT NULL UNIQUE,
     country_id INT,
     company_id INT,
-    FOREIGN KEY (country_id) REFERENCES country (country_id),
+    FOREIGN KEY (country_id) REFERENCES country (country_id), ON DELETE SET NULL
     FOREIGN KEY (company_id) REFERENCES company (company_id) ON DELETE RESTRICT
 );
 
@@ -65,7 +65,7 @@ CREATE TABLE perfumer
     company_id  INT,
     country_id  INT,
     FOREIGN KEY (company_id) REFERENCES company (company_id),
-    FOREIGN KEY (country_id) REFERENCES country (country_id)
+    FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE SET NULL
 );
 
 CREATE TABLE fragrance
@@ -76,7 +76,7 @@ CREATE TABLE fragrance
     brand_id     INT,
     country_id   INT,
     FOREIGN KEY (brand_id) REFERENCES brand (brand_id),
-    FOREIGN KEY (country_id) REFERENCES country (country_id)
+    FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE SET NULL
 );
 
 -- ******************************************
@@ -92,8 +92,8 @@ CREATE TABLE fragrance_perfumer
     fragrance_id INT,
     perfumer_id  INT,
     PRIMARY KEY (fragrance_id, perfumer_id),
-    FOREIGN KEY (fragrance_id) REFERENCES fragrance (fragrance_id),
-    FOREIGN KEY (perfumer_id) REFERENCES perfumer (perfumer_id)
+    FOREIGN KEY (fragrance_id) REFERENCES fragrance (fragrance_id) ON DELETE CASCADE,
+    FOREIGN KEY (perfumer_id) REFERENCES perfumer (perfumer_id) ON DELETE CASCADE
 );
 
 CREATE TABLE fragrance_concentration
