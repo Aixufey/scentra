@@ -69,6 +69,23 @@ public class PerfumerBrandServiceImpl implements PerfumerBrandService {
         perfumerRepository.save(perfumer);
     }
 
+    @Override
+    @Transactional
+    public void deleteAll(long perfumerId) {
+        Perfumer perfumer = getPerfumer(perfumerId);
+
+        // Remove perfumer from each brand's collection
+        Set<Brand> brands = perfumer.getBrands();
+        for (var brand : brands) {
+            brand.getPerfumers().remove(perfumer);
+            brandRepository.saveAndFlush(brand);
+        }
+        // Clear perfumer's collection of brands
+        perfumer.getBrands().clear();
+
+        perfumerRepository.save(perfumer);
+    }
+
     private List<Brand> getBrands(long perfumerId) {
         String jpql = """
                 SELECT b FROM Brand b

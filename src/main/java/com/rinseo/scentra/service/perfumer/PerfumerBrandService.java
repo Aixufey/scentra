@@ -10,4 +10,6 @@ public interface PerfumerBrandService {
     List<Brand> updateBrand(long perfumerId, long brandId);
 
     void deleteBrand(long perfumerId, long brandId);
+
+    void deleteAll(long perfumerId);
 }

@@ -102,6 +102,23 @@ public class PerfumerFragranceServiceImpl implements PerfumerFragranceService {
         fragranceRepository.saveAndFlush(fragrance);
     }
 
+    @Override
+    @Transactional
+    public void deleteAll(long perfumerId) {
+        Perfumer perfumer = getPerfumer(perfumerId);
+
+        // Remove perfumer from each fragrance's collection
+        Set<Fragrance> fragrances = perfumer.getFragrances();
+        for (var frag : fragrances) {
+            frag.getPerfumers().remove(perfumer);
+            fragranceRepository.saveAndFlush(frag);
+        }
+        // Clear perfumer's collection of fragrances
+        perfumer.getFragrances().clear();
+
+        perfumerRepository.saveAndFlush(perfumer);
+    }
+
     private Fragrance getFragrance(long fragranceId) {
         return fragranceRepository.findById(fragranceId)
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + fragranceId));

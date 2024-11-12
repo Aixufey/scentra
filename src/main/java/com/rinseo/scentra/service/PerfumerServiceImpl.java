@@ -4,6 +4,7 @@ import com.rinseo.scentra.exception.PerfumerNotFoundException;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
 import com.rinseo.scentra.repository.PerfumerRepository;
+import com.rinseo.scentra.service.perfumer.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 public class PerfumerServiceImpl implements PerfumerService {
     private final PerfumerRepository repo;
+    private final PerfumerFragranceServiceImpl perfumerFragranceService;
+    private final PerfumerBrandServiceImpl perfumerBrandService;
+    private final PerfumerCountryServiceImpl perfumerCountryService;
+    private final PerfumerCompanyServiceImpl perfumerCompanyService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -51,6 +56,11 @@ public class PerfumerServiceImpl implements PerfumerService {
 
     @Override
     public void deleteById(long id) {
+        perfumerFragranceService.deleteAll(id);
+        perfumerBrandService.deleteAll(id);
+        perfumerCountryService.deleteCountry(id);
+        perfumerCompanyService.deleteCompany(id);
+
         repo.deleteById(id);
     }
 }
