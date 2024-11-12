@@ -1,12 +1,10 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.model.Brand;
-import com.rinseo.scentra.model.Country;
-import com.rinseo.scentra.model.Fragrance;
-import com.rinseo.scentra.model.Perfumer;
+import com.rinseo.scentra.model.*;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
 import com.rinseo.scentra.service.PerfumerServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerBrandServiceImpl;
+import com.rinseo.scentra.service.perfumer.PerfumerCompanyServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerCountryServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerFragranceServiceImpl;
 import jakarta.validation.Valid;
@@ -28,6 +26,7 @@ public class PerfumerController {
     private PerfumerFragranceServiceImpl perfumerFragranceService;
     private PerfumerBrandServiceImpl perfumerBrandService;
     private PerfumerCountryServiceImpl perfumerCountryService;
+    private PerfumerCompanyServiceImpl perfumerCompanyService;
 
     @GetMapping("/perfumers")
     public ResponseEntity<List<Perfumer>> getAllPerfumers() {
@@ -151,6 +150,30 @@ public class PerfumerController {
     @DeleteMapping("/perfumers/{id}/country")
     public ResponseEntity<Void> deleteCountryRelation(@PathVariable long id) {
         perfumerCountryService.deleteCountry(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    /////////////////////////// COMPANY INVERSE RELATIONSHIP ///////////////////////////
+    @GetMapping("/perfumers/{id}/company")
+    public ResponseEntity<Company> getPerfumerCompany(@PathVariable long id) {
+        Company company = perfumerCompanyService.getCompany(id);
+
+        return ResponseEntity.ok(company);
+    }
+
+    @PutMapping("/perfumers/{id}/company/{companyId}")
+    public ResponseEntity<Company> updatePerfumerCompany(@PathVariable long id, @PathVariable long companyId) {
+        Company company = perfumerCompanyService.updateCompany(id, companyId);
+
+        return ResponseEntity.ok(company);
+    }
+
+    @DeleteMapping("/perfumers/{id}/company")
+    public ResponseEntity<Void> deleteCompanyRelation(@PathVariable long id) {
+        perfumerCompanyService.deleteCompany(id);
 
         return ResponseEntity
                 .noContent()
