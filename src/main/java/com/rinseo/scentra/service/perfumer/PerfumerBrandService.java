@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface PerfumerBrandService {
     List<Brand> getAll(long perfumerId);
+
     List<Brand> updateBrand(long perfumerId, long brandId);
+
     void deleteBrand(long perfumerId, long brandId);
 }
