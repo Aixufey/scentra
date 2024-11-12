@@ -1,9 +1,11 @@
 package com.rinseo.scentra.controller;
 
+import com.rinseo.scentra.model.Brand;
 import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
 import com.rinseo.scentra.service.PerfumerServiceImpl;
+import com.rinseo.scentra.service.perfumer.PerfumerBrandServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerFragranceServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.List;
 public class PerfumerController {
     private PerfumerServiceImpl service;
     private PerfumerFragranceServiceImpl perfumerFragranceService;
+    private PerfumerBrandServiceImpl perfumerBrandService;
 
     @GetMapping("/perfumers")
     public ResponseEntity<List<Perfumer>> getAllPerfumers() {
@@ -96,6 +99,30 @@ public class PerfumerController {
     @DeleteMapping("/perfumers/{id}/fragrances/{fragranceId}")
     public ResponseEntity<Void> deleteFragranceRelation(@PathVariable long id, @PathVariable long fragranceId) {
         perfumerFragranceService.deleteFragrance(id, fragranceId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    /////////////////////////// BRAND INVERSE RELATIONSHIP ///////////////////////////
+    @GetMapping("/perfumers/{id}/brands")
+    public ResponseEntity<List<Brand>> getPerfumerBrands(@PathVariable long id) {
+        List<Brand> brandsRelation = perfumerBrandService.getAll(id);
+
+        return ResponseEntity.ok(brandsRelation);
+    }
+
+    @PutMapping("/perfumers/{id}/brands/{brandId}")
+    public ResponseEntity<List<Brand>> updatePerfumerBrands(@PathVariable long id, @PathVariable long brandId) {
+        List<Brand> brands = perfumerBrandService.updateBrand(id, brandId);
+
+        return ResponseEntity.ok(brands);
+    }
+
+    @DeleteMapping("/perfumers/{id}/brands/{brandId}")
+    public ResponseEntity<Void> deleteBrandRelation(@PathVariable long id, @PathVariable long brandId) {
+        perfumerBrandService.deleteBrand(id, brandId);
 
         return ResponseEntity
                 .noContent()
