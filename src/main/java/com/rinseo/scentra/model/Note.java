@@ -1,10 +1,13 @@
 package com.rinseo.scentra.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -26,12 +29,16 @@ public class Note implements Serializable {
     @Column(unique = true)
     private String name;
     private String description;
+
     @ManyToOne
-    @JoinColumn(name = "accord_id")
+    @JoinColumn(name = "accord_id", referencedColumnName = "accord_id")
+    @JsonManagedReference
     private Accord accord;
 
     @ManyToMany(mappedBy = "notes", fetch = FetchType.LAZY)
     @JsonBackReference // Prevents recursive serialization JSON
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Fragrance> fragrances = new HashSet<>();
 
     public Note(String name, String description, Accord accord) {

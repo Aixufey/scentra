@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -29,6 +31,8 @@ public class Concentration implements Serializable {
 
     @ManyToMany(mappedBy = "concentrations", fetch = FetchType.LAZY)
     @JsonBackReference // Prevents recursive serialization JSON
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Fragrance> fragrances = new HashSet<>();
 
     public Concentration(String name, String description) {

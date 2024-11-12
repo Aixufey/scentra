@@ -1,6 +1,7 @@
 package com.rinseo.scentra.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -29,11 +30,18 @@ public class Fragrance implements Serializable {
     @Max(value = 2025, message = "Year must be less than 2026.")
     @Column(name = "\"year\"")
     private int year;
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "brand_id")
+
+    // Bidirectional relationship with Brand
+    // Cascade type is set to PERSIST and MERGE
+    // Allows fragrance operations to cascade to the brand
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "brand_id", referencedColumnName = "brand_id")
+    @JsonManagedReference
     private Brand brand;
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "country_id")
+
+    @ManyToOne
+    @JoinColumn(name = "country_id", referencedColumnName = "country_id")
+    @JsonManagedReference
     private Country country;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
