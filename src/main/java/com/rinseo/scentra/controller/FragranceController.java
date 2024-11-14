@@ -1,11 +1,9 @@
 package com.rinseo.scentra.controller;
 
-import com.rinseo.scentra.model.Concentration;
-import com.rinseo.scentra.model.Fragrance;
-import com.rinseo.scentra.model.Note;
-import com.rinseo.scentra.model.Perfumer;
+import com.rinseo.scentra.model.*;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceServiceV2Impl;
+import com.rinseo.scentra.service.fragrance.FragranceBrandServiceImpl;
 import com.rinseo.scentra.service.fragrance.FragrancePerfumerServiceImpl;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +21,16 @@ import java.util.List;
 public class FragranceController {
     private final FragranceServiceV2Impl service;
     private final FragrancePerfumerServiceImpl fragrancePerfumerService;
+    private final FragranceBrandServiceImpl fragranceBrandService;
 
     @Autowired
-    public FragranceController(FragranceServiceV2Impl service, FragrancePerfumerServiceImpl fragrancePerfumerService) {
+    public FragranceController(
+            FragranceServiceV2Impl service,
+            FragrancePerfumerServiceImpl fragrancePerfumerService,
+            FragranceBrandServiceImpl fragranceBrandService) {
         this.service = service;
         this.fragrancePerfumerService = fragrancePerfumerService;
+        this.fragranceBrandService = fragranceBrandService;
     }
 
     @GetMapping("/v1/fragrances")
@@ -85,16 +88,23 @@ public class FragranceController {
                 .build();
     }
 
-    @PatchMapping("/v1/fragrances/{fragranceId}/brand/{brandId}")
-    public ResponseEntity<Fragrance> updateBrandRelation(@PathVariable long fragranceId, @PathVariable long brandId) {
-        Fragrance fragrance = service.updateBrandRelation(fragranceId, brandId);
+    @GetMapping("/v1/fragrances/{fragranceId}/brand")
+    public ResponseEntity<Brand> getBrandRelation(@PathVariable long fragranceId) {
+        Brand brand = fragranceBrandService.getBrand(fragranceId);
 
-        return ResponseEntity.ok(fragrance);
+        return ResponseEntity.ok(brand);
     }
 
-    @DeleteMapping("/v1/fragrances/{fragranceId}/brand/{brandId}")
-    public ResponseEntity<Void> deleteBrandRelation(@PathVariable long fragranceId, @PathVariable long brandId) {
-        service.deleteBrandRelation(fragranceId, brandId);
+    @PatchMapping("/v1/fragrances/{fragranceId}/brand/{brandId}")
+    public ResponseEntity<Brand> updateBrandRelation(@PathVariable long fragranceId, @PathVariable long brandId) {
+        Brand brand = fragranceBrandService.updateBrand(fragranceId, brandId);
+
+        return ResponseEntity.ok(brand);
+    }
+
+    @DeleteMapping("/v1/fragrances/{fragranceId}/brand")
+    public ResponseEntity<Void> deleteBrandRelation(@PathVariable long fragranceId) {
+        fragranceBrandService.deleteBrand(fragranceId);
 
         return ResponseEntity
                 .noContent()
