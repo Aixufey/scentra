@@ -23,6 +23,7 @@ public class FragranceController {
     private final FragranceBrandServiceImpl fragranceBrandService;
     private final FragranceCountryServiceImpl fragranceCountryService;
     private final FragranceNoteServiceImpl fragranceNoteService;
+    private final FragranceConcentrationServiceImpl fragranceConcentrationService;
 
     @Autowired
     public FragranceController(
@@ -30,12 +31,14 @@ public class FragranceController {
             FragrancePerfumerServiceImpl fragrancePerfumerService,
             FragranceBrandServiceImpl fragranceBrandService,
             FragranceCountryServiceImpl fragranceCountryService,
-            FragranceNoteServiceImpl fragranceNoteService) {
+            FragranceNoteServiceImpl fragranceNoteService,
+            FragranceConcentrationServiceImpl fragranceConcentrationService) {
         this.service = service;
         this.fragrancePerfumerService = fragrancePerfumerService;
         this.fragranceBrandService = fragranceBrandService;
         this.fragranceCountryService = fragranceCountryService;
         this.fragranceNoteService = fragranceNoteService;
+        this.fragranceConcentrationService = fragranceConcentrationService;
     }
 
     @GetMapping("/v1/fragrances")
@@ -165,23 +168,33 @@ public class FragranceController {
                 .build();
     }
 
+    ////////////////// CONCENTRATIONS INVERSE RELATIONSHIP /////////////////
     @GetMapping("/v1/fragrances/{fragranceId}/concentrations")
     public ResponseEntity<List<Concentration>> getConcentrations(@PathVariable long fragranceId) {
-        List<Concentration> concentrations = service.getConcentrationsRelation(fragranceId);
+        List<Concentration> concentrations = fragranceConcentrationService.getAll(fragranceId);
 
         return ResponseEntity.ok(concentrations);
     }
 
     @PatchMapping("/v1/fragrances/{fragranceId}/concentrations/{concentrationId}")
-    public ResponseEntity<List<Concentration>> updateConcentrations(@PathVariable long fragranceId, @PathVariable long concentrationId) {
-        List<Concentration> concentrations = service.updateConcentrationRelation(fragranceId, concentrationId);
+    public ResponseEntity<Concentration> updateConcentrations(@PathVariable long fragranceId, @PathVariable long concentrationId) {
+        Concentration concentrations = fragranceConcentrationService.updateConcentration(fragranceId, concentrationId);
 
         return ResponseEntity.ok(concentrations);
     }
 
     @DeleteMapping("/v1/fragrances/{fragranceId}/concentrations/{concentrationId}")
     public ResponseEntity<Void> deleteConcentration(@PathVariable long fragranceId, @PathVariable long concentrationId) {
-        service.deleteConcentrationRelation(fragranceId, concentrationId);
+        fragranceConcentrationService.deleteConcentration(fragranceId, concentrationId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @DeleteMapping("/v1/fragrances/{fragranceId}/concentrations")
+    public ResponseEntity<Void> deleteAllConcentrations(@PathVariable long fragranceId) {
+        fragranceConcentrationService.deleteAll(fragranceId);
 
         return ResponseEntity
                 .noContent()
