@@ -10,4 +10,6 @@ public interface FragrancePerfumerService {
     List<Perfumer> updatePerfumers(long fragranceId, List<Long> perfumerIds);
 
     void deletePerfumer(long fragranceId, long perfumerId);
+
+    void deleteAll(long fragranceId);
 }

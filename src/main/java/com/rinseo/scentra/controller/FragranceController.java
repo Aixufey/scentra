@@ -168,6 +168,15 @@ public class FragranceController {
                 .build();
     }
 
+    @DeleteMapping("/v1/fragrances/{fragranceId}/perfumers")
+    public ResponseEntity<Void> deleteAllPerfumers(@PathVariable long fragranceId) {
+        fragrancePerfumerService.deleteAll(fragranceId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
     ////////////////// CONCENTRATIONS INVERSE RELATIONSHIP /////////////////
     @GetMapping("/v1/fragrances/{fragranceId}/concentrations")
     public ResponseEntity<List<Concentration>> getConcentrations(@PathVariable long fragranceId) {
