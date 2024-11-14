@@ -1,6 +1,6 @@
 package com.rinseo.scentra.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -18,6 +18,7 @@ import java.util.Set;
 @Entity
 @ToString(exclude = {"perfumers", "fragrances", "companies", "brands"})
 @EqualsAndHashCode(exclude = {"perfumers", "fragrances", "companies", "brands"})
+@JsonIgnoreProperties(value = {"perfumers", "fragrances", "companies", "brands"})
 public class Country implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,19 +33,19 @@ public class Country implements Serializable {
 
     // One-to-many relationships
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @JsonBackReference
     private Set<Perfumer> perfumers = new HashSet<>();
 
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @JsonBackReference
     private Set<Fragrance> fragrances = new HashSet<>();
 
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @JsonBackReference
     private Set<Company> companies = new HashSet<>();
 
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @JsonBackReference
     private Set<Brand> brands = new HashSet<>();
 
     public Country(String name) {

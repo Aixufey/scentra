@@ -1,7 +1,6 @@
 package com.rinseo.scentra.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -17,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
+@JsonIgnoreProperties(value = {"fragrances"})
 public class Note implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class Note implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "accord_id", referencedColumnName = "accord_id")
-    @JsonManagedReference
+//    @JsonManagedReference
     private Accord accord;
 
     @ManyToMany(mappedBy = "notes", fetch = FetchType.LAZY)

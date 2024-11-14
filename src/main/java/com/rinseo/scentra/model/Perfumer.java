@@ -1,8 +1,6 @@
 package com.rinseo.scentra.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -19,7 +17,7 @@ import java.util.Set;
 @Data
 @Entity
 @ToString(exclude = {"fragrances", "brands"})
-@JsonIgnoreProperties(value = {"brands"})
+@JsonIgnoreProperties(value = {"fragrances", "brands"})
 public class Perfumer implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -51,7 +49,7 @@ public class Perfumer implements Serializable {
     // Fetch eager for single entity
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "company_id")
-    @JsonManagedReference
+//    @JsonManagedReference
     private Company company;
 
     // Bidirectional relationship with Country
@@ -59,7 +57,7 @@ public class Perfumer implements Serializable {
     // Owner of the relationship
     @ManyToOne
     @JoinColumn(name = "country_id", referencedColumnName = "country_id")
-    @JsonManagedReference
+//    @JsonManagedReference
     private Country country;
 
     public Perfumer(String name) {

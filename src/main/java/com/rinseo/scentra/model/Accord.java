@@ -1,6 +1,6 @@
 package com.rinseo.scentra.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -16,6 +16,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties(value = {"notes"})
 public class Accord implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -30,7 +31,7 @@ public class Accord implements Serializable {
     private String description;
 
     @OneToMany(mappedBy = "accord", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @JsonBackReference
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Note> notes = new HashSet<>();

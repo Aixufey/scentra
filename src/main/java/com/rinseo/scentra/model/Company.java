@@ -1,7 +1,6 @@
 package com.rinseo.scentra.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -19,6 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"perfumers", "brands"})
 @EqualsAndHashCode(exclude = {"perfumers", "brands"})
+@JsonIgnoreProperties(value = {"perfumers", "brands"})
 public class Company implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -33,7 +33,7 @@ public class Company implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "country_id", referencedColumnName = "country_id")
-    @JsonManagedReference
+//    @JsonManagedReference
     private Country country;
 
     // Bidirectional relationship with Perfumer
@@ -43,13 +43,13 @@ public class Company implements Serializable {
     // Persist a new perfumer when a new company is created
     // Merge changes to the perfumer when the company is updated
     @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @JsonBackReference
     private Set<Perfumer> perfumers = new HashSet<>();
 
     // Bidirectional relationship with Brand
     // A company can own multiple brands
     @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @JsonBackReference
     private Set<Brand> brands = new HashSet<>();
 
     public Company(String name) {

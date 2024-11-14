@@ -1,6 +1,7 @@
 package com.rinseo.scentra.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Entity
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(value = {"fragrances"})
 public class Concentration implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
