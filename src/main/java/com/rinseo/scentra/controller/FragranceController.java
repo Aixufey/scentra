@@ -4,6 +4,7 @@ import com.rinseo.scentra.model.*;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceServiceV2Impl;
 import com.rinseo.scentra.service.fragrance.FragranceBrandServiceImpl;
+import com.rinseo.scentra.service.fragrance.FragranceCountryServiceImpl;
 import com.rinseo.scentra.service.fragrance.FragrancePerfumerServiceImpl;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +23,18 @@ public class FragranceController {
     private final FragranceServiceV2Impl service;
     private final FragrancePerfumerServiceImpl fragrancePerfumerService;
     private final FragranceBrandServiceImpl fragranceBrandService;
+    private final FragranceCountryServiceImpl fragranceCountryService;
 
     @Autowired
     public FragranceController(
             FragranceServiceV2Impl service,
             FragrancePerfumerServiceImpl fragrancePerfumerService,
-            FragranceBrandServiceImpl fragranceBrandService) {
+            FragranceBrandServiceImpl fragranceBrandService,
+            FragranceCountryServiceImpl fragranceCountryService) {
         this.service = service;
         this.fragrancePerfumerService = fragrancePerfumerService;
         this.fragranceBrandService = fragranceBrandService;
+        this.fragranceCountryService = fragranceCountryService;
     }
 
     @GetMapping("/v1/fragrances")
@@ -111,16 +115,24 @@ public class FragranceController {
                 .build();
     }
 
-    @PatchMapping("/v1/fragrances/{fragranceId}/country/{countryId}")
-    public ResponseEntity<Fragrance> updateCountryRelation(@PathVariable long fragranceId, @PathVariable long countryId) {
-        Fragrance fragrance = service.updateCountryRelation(fragranceId, countryId);
+    ////////////////// COUNTRY INVERSE RELATIONSHIP /////////////////
+    @GetMapping("/v1/fragrances/{fragranceId}/country")
+    public ResponseEntity<Country> getCountryRelation(@PathVariable long fragranceId) {
+        Country country = fragranceCountryService.getCountry(fragranceId);
 
-        return ResponseEntity.ok(fragrance);
+        return ResponseEntity.ok(country);
     }
 
-    @DeleteMapping("/v1/fragrances/{fragranceId}/country/{countryId}")
-    public ResponseEntity<Void> deleteCountryRelation(@PathVariable long fragranceId, @PathVariable long countryId) {
-        service.deleteCountryRelation(fragranceId, countryId);
+    @PatchMapping("/v1/fragrances/{fragranceId}/country/{countryId}")
+    public ResponseEntity<Country> updateCountryRelation(@PathVariable long fragranceId, @PathVariable long countryId) {
+        Country country = fragranceCountryService.updateCountry(fragranceId, countryId);
+
+        return ResponseEntity.ok(country);
+    }
+
+    @DeleteMapping("/v1/fragrances/{fragranceId}/country")
+    public ResponseEntity<Void> deleteCountryRelation(@PathVariable long fragranceId) {
+        fragranceCountryService.deleteCountry(fragranceId);
 
         return ResponseEntity
                 .noContent()
