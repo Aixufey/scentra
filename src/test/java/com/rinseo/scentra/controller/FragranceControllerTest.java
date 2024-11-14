@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceServiceV2Impl;
+import com.rinseo.scentra.service.fragrance.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,13 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 // This annotation will only scan for web layer components such as Controller and load into the Spring context
 // If Spring Security is enabled, it will be excluded with excludeAutoConfiguration
 @WebMvcTest(controllers = FragranceController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
-@MockBean({FragranceServiceV2Impl.class})
+@MockBean({
+        FragranceServiceV2Impl.class,
+        FragrancePerfumerServiceImpl.class,
+        FragranceBrandServiceImpl.class,
+        FragranceCountryServiceImpl.class,
+        FragranceNoteServiceImpl.class,
+        FragranceConcentrationServiceImpl.class})
 //@Import(FragranceControllerTest.TestConfig.class)
 class FragranceControllerTest {
     @Autowired
