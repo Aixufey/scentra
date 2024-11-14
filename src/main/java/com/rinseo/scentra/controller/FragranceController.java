@@ -6,6 +6,7 @@ import com.rinseo.scentra.model.Note;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceServiceV2Impl;
+import com.rinseo.scentra.service.fragrance.FragrancePerfumerServiceImpl;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,12 @@ import java.util.List;
 @Slf4j
 public class FragranceController {
     private final FragranceServiceV2Impl service;
+    private final FragrancePerfumerServiceImpl fragrancePerfumerService;
 
     @Autowired
-    public FragranceController(FragranceServiceV2Impl service) {
+    public FragranceController(FragranceServiceV2Impl service, FragrancePerfumerServiceImpl fragrancePerfumerService) {
         this.service = service;
+        this.fragrancePerfumerService = fragrancePerfumerService;
     }
 
     @GetMapping("/v1/fragrances")
@@ -114,23 +117,24 @@ public class FragranceController {
                 .build();
     }
 
+    ///////////////// PERFUMERS INVERSE RELATIONSHIP /////////////////
     @GetMapping("/v1/fragrances/{fragranceId}/perfumers")
     public ResponseEntity<List<Perfumer>> getPerfumers(@PathVariable long fragranceId) {
-        List<Perfumer> perfumers = service.getPerfumersRelation(fragranceId);
+        List<Perfumer> perfumers = fragrancePerfumerService.getAll(fragranceId);
 
         return ResponseEntity.ok(perfumers);
     }
 
-    @PatchMapping("/v1/fragrances/{fragranceId}/perfumers/{perfumerId}")
-    public ResponseEntity<List<Perfumer>> updatePerfumers(@PathVariable long fragranceId, @PathVariable long perfumerId) {
-        List<Perfumer> perfumers = service.updatePerfumerRelation(fragranceId, perfumerId);
+    @PatchMapping("/v1/fragrances/{fragranceId}/perfumers")
+    public ResponseEntity<List<Perfumer>> updatePerfumers(@PathVariable long fragranceId, @RequestBody List<Long> perfumerIds) {
+        List<Perfumer> perfumers = fragrancePerfumerService.updatePerfumers(fragranceId, perfumerIds);
 
         return ResponseEntity.ok(perfumers);
     }
 
     @DeleteMapping("/v1/fragrances/{fragranceId}/perfumers/{perfumerId}")
     public ResponseEntity<Void> deletePerfumer(@PathVariable long fragranceId, @PathVariable long perfumerId) {
-        service.deletePerfumerRelation(fragranceId, perfumerId);
+        fragrancePerfumerService.deletePerfumer(fragranceId, perfumerId);
 
         return ResponseEntity
                 .noContent()
