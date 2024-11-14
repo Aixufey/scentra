@@ -3,9 +3,7 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.model.*;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceServiceV2Impl;
-import com.rinseo.scentra.service.fragrance.FragranceBrandServiceImpl;
-import com.rinseo.scentra.service.fragrance.FragranceCountryServiceImpl;
-import com.rinseo.scentra.service.fragrance.FragrancePerfumerServiceImpl;
+import com.rinseo.scentra.service.fragrance.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +22,20 @@ public class FragranceController {
     private final FragrancePerfumerServiceImpl fragrancePerfumerService;
     private final FragranceBrandServiceImpl fragranceBrandService;
     private final FragranceCountryServiceImpl fragranceCountryService;
+    private final FragranceNoteServiceImpl fragranceNoteService;
 
     @Autowired
     public FragranceController(
             FragranceServiceV2Impl service,
             FragrancePerfumerServiceImpl fragrancePerfumerService,
             FragranceBrandServiceImpl fragranceBrandService,
-            FragranceCountryServiceImpl fragranceCountryService) {
+            FragranceCountryServiceImpl fragranceCountryService,
+            FragranceNoteServiceImpl fragranceNoteService) {
         this.service = service;
         this.fragrancePerfumerService = fragrancePerfumerService;
         this.fragranceBrandService = fragranceBrandService;
         this.fragranceCountryService = fragranceCountryService;
+        this.fragranceNoteService = fragranceNoteService;
     }
 
     @GetMapping("/v1/fragrances")
@@ -92,6 +93,7 @@ public class FragranceController {
                 .build();
     }
 
+    ///////////////// BRAND INVERSE RELATIONSHIP /////////////////
     @GetMapping("/v1/fragrances/{fragranceId}/brand")
     public ResponseEntity<Brand> getBrandRelation(@PathVariable long fragranceId) {
         Brand brand = fragranceBrandService.getBrand(fragranceId);
@@ -186,23 +188,33 @@ public class FragranceController {
                 .build();
     }
 
+    ////////////////// NOTES INVERSE RELATIONSHIP /////////////////
     @GetMapping("/v1/fragrances/{fragranceId}/notes")
     public ResponseEntity<List<Note>> getNotes(@PathVariable long fragranceId) {
-        List<Note> notes = service.getNotesRelation(fragranceId);
+        List<Note> notes = fragranceNoteService.getAll(fragranceId);
 
         return ResponseEntity.ok(notes);
     }
 
-    @PatchMapping("/v1/fragrances/{fragranceId}/notes/{noteId}")
-    public ResponseEntity<List<Note>> updateNotes(@PathVariable long fragranceId, @PathVariable long noteId) {
-        List<Note> notes = service.updateNoteRelation(fragranceId, noteId);
+    @PatchMapping("/v1/fragrances/{fragranceId}/notes")
+    public ResponseEntity<List<Note>> updateNotes(@PathVariable long fragranceId, @RequestBody List<Long> noteIds) {
+        List<Note> notes = fragranceNoteService.updateNotes(fragranceId, noteIds);
 
         return ResponseEntity.ok(notes);
     }
 
     @DeleteMapping("/v1/fragrances/{fragranceId}/notes/{noteId}")
     public ResponseEntity<Void> deleteNote(@PathVariable long fragranceId, @PathVariable long noteId) {
-        service.deleteNoteRelation(fragranceId, noteId);
+        fragranceNoteService.deleteNote(fragranceId, noteId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @DeleteMapping("/v1/fragrances/{fragranceId}/notes")
+    public ResponseEntity<Void> deleteAllNotes(@PathVariable long fragranceId) {
+        fragranceNoteService.deleteAll(fragranceId);
 
         return ResponseEntity
                 .noContent()
