@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rinseo.scentra.model.Perfumer;
 import com.rinseo.scentra.model.dto.PerfumerDTO;
 import com.rinseo.scentra.service.PerfumerServiceImpl;
+import com.rinseo.scentra.service.perfumer.PerfumerBrandServiceImpl;
+import com.rinseo.scentra.service.perfumer.PerfumerCompanyServiceImpl;
+import com.rinseo.scentra.service.perfumer.PerfumerCountryServiceImpl;
+import com.rinseo.scentra.service.perfumer.PerfumerFragranceServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +25,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = PerfumerController.class)
-@MockBean({PerfumerServiceImpl.class})
+@MockBean({
+        PerfumerServiceImpl.class,
+        PerfumerFragranceServiceImpl.class,
+        PerfumerCompanyServiceImpl.class,
+        PerfumerBrandServiceImpl.class,
+        PerfumerCountryServiceImpl.class})
 class PerfumerControllerTest {
     @Autowired
     private MockMvc mockMvc;
