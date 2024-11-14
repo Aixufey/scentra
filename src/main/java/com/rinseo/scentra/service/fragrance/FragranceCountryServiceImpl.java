@@ -67,7 +67,7 @@ public class FragranceCountryServiceImpl implements FragranceCountryService {
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance with id " + fragranceId + " not found"));
     }
 
-    private Country getFragranceCountry(long countryId) {
+    public Country getFragranceCountry(long countryId) {
         return countryRepository.findById(countryId)
                 .orElseThrow(() -> new CountryNotFoundException("Country with id " + countryId + " not found"));
     }

@@ -98,7 +98,7 @@ public class FragranceConcentrationServiceImpl implements FragranceConcentration
         fragranceRepository.saveAndFlush(fragrance);
     }
 
-    private Concentration getConcentration(long concentrationId) {
+    public Concentration getConcentration(long concentrationId) {
         return concentrationRepository.findById(concentrationId)
                 .orElseThrow(() -> new ConcentrationNotFoundException("Concentration with id " + concentrationId + " not found"));
     }

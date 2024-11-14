@@ -63,8 +63,7 @@ public class FragranceNoteServiceImpl implements FragranceNoteService {
     public void deleteNote(long fragranceId, long noteId) {
         Fragrance fragrance = getFragrance(fragranceId);
 
-        Note note = noteRepository.findById(noteId)
-                .orElseThrow(() -> new NoteNotFoundException("Note with id " + noteId + " not found"));
+        Note note = getNote(noteId);
 
         Set<Note> notes = fragrance.getNotes();
         notes.remove(note);
@@ -99,5 +98,10 @@ public class FragranceNoteServiceImpl implements FragranceNoteService {
     private Fragrance getFragrance(long fragranceId) {
         return fragranceRepository.findById(fragranceId)
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance with id " + fragranceId + " not found"));
+    }
+
+    public Note getNote(long noteId) {
+        return noteRepository.findById(noteId)
+                .orElseThrow(() -> new NoteNotFoundException("Note with id " + noteId + " not found"));
     }
 }

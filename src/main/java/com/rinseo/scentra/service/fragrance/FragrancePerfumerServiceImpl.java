@@ -101,7 +101,7 @@ public class FragrancePerfumerServiceImpl implements FragrancePerfumerService {
         perfumerRepository.saveAllAndFlush(perfumers);
     }
 
-    private Perfumer getPerfumer(long perfumerId) {
+    public Perfumer getPerfumer(long perfumerId) {
         return perfumerRepository.findById(perfumerId)
                 .orElseThrow(() -> new PerfumerNotFoundException("Perfumer with id " + perfumerId + " not found"));
     }

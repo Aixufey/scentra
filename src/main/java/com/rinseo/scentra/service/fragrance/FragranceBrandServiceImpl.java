@@ -66,7 +66,7 @@ public class FragranceBrandServiceImpl implements FragranceBrandService {
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance with id " + fragranceId + " not found"));
     }
 
-    private Brand getFragranceBrand(long brandId) {
+    public Brand getFragranceBrand(long brandId) {
         return brandRepository.findById(brandId)
                 .orElseThrow(() -> new BrandNotFoundException("Brand with id " + brandId + " not found"));
     }
