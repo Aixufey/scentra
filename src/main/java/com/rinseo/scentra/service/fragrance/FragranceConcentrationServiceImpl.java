@@ -80,6 +80,7 @@ public class FragranceConcentrationServiceImpl implements FragranceConcentration
     }
 
     @Override
+    @Transactional
     public void deleteAll(long fragranceId) {
         Fragrance fragrance = getFragrance(fragranceId);
 
