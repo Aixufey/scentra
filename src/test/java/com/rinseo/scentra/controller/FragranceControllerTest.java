@@ -26,18 +26,33 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 // If Spring Security is enabled, it will be excluded with excludeAutoConfiguration
 @WebMvcTest(controllers = FragranceController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 @MockBean({FragranceServiceV2Impl.class})
+//@Import(FragranceControllerTest.TestConfig.class)
 class FragranceControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
 //    @MockBean
     private FragranceServiceV2Impl service;
+    //@Autowired
+    //private ModelMapper modelMapper;
+
+//    @TestConfiguration
+//    static class TestConfig {
+//        @Bean
+//        public ModelMapper modelMapper() {
+//            ModelMapper modelMapper = new ModelMapper();
+//            modelMapper.getConfiguration()
+//                    .setFieldMatchingEnabled(true)
+//                    .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
+//            return modelMapper;
+//        }
+//    }
 
     @Test
     @DisplayName("Fragrance can be saved")
     void testSaveFragrance_whenFragranceIsValid_thenReturnFragranceDetails() throws Exception {
         // Arrange
-        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2027);
+        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2021);
         Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
         // Integration test with service layer, the service layer is mocked
