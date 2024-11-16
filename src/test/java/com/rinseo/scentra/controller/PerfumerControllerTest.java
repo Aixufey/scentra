@@ -44,7 +44,7 @@ class PerfumerControllerTest {
         PerfumerDTO perfumerDTO = new PerfumerDTO(1L, "Test Perfumer");
         Perfumer perfumerRequest = new ModelMapper().map(perfumerDTO, Perfumer.class);
 
-        when(service.create(any(PerfumerDTO.class))).thenReturn(perfumerDTO);
+        when(service.create(any(PerfumerDTO.class))).thenReturn(perfumerRequest);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/perfumers")
                 .contentType(MediaType.APPLICATION_JSON)
