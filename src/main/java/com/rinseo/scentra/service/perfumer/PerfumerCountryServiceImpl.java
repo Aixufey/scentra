@@ -34,8 +34,7 @@ public class PerfumerCountryServiceImpl implements PerfumerCountryService {
         Perfumer perfumer = repo.findById(perfumerId)
                 .orElseThrow(() -> new PerfumerNotFoundException("Perfumer with id " + perfumerId + " not found"));
 
-        Country country = countryRepository.findById(countryId)
-                .orElseThrow(() -> new CountryNotFoundException("Country with id " + countryId + " not found"));
+        Country country = getPerfumerCountry(countryId);
 
         perfumer.setCountry(country);
         repo.saveAndFlush(perfumer);
@@ -52,5 +51,10 @@ public class PerfumerCountryServiceImpl implements PerfumerCountryService {
         perfumer.setCountry(null);
 
         repo.saveAndFlush(perfumer);
+    }
+
+    public Country getPerfumerCountry(long countryId) {
+        return countryRepository.findById(countryId)
+                .orElseThrow(() -> new CountryNotFoundException("Country with id " + countryId + " not found"));
     }
 }

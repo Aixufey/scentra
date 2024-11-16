@@ -12,9 +12,9 @@ public interface PerfumerService {
 
     List<Perfumer> getByName(String name);
 
-    PerfumerDTO create(PerfumerDTO perfumer);
+    Perfumer create(PerfumerDTO perfumer);
 
-    PerfumerDTO update(long id, PerfumerDTO perfumer);
+    Perfumer update(long id, PerfumerDTO perfumer);
 
     void deleteById(long id);
 }

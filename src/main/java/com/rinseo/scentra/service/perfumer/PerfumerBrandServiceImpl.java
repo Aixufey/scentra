@@ -97,7 +97,7 @@ public class PerfumerBrandServiceImpl implements PerfumerBrandService {
                 .getResultList();
     }
 
-    private Brand getBrand(long brandId) {
+    public Brand getBrand(long brandId) {
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new BrandNotFoundException("Brand not found with ID: " + brandId));
         return brand;

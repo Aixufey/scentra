@@ -51,8 +51,8 @@ public class PerfumerController {
     }
 
     @PutMapping("/perfumers/{id}")
-    public ResponseEntity<PerfumerDTO> update(@PathVariable long id, @Valid @RequestBody PerfumerDTO perfumer) {
-        PerfumerDTO perfumerDTO = service.update(id, perfumer);
+    public ResponseEntity<Perfumer> update(@PathVariable long id, @Valid @RequestBody PerfumerDTO perfumer) {
+        Perfumer perfumerDTO = service.update(id, perfumer);
 
         return ResponseEntity
                 .ok(perfumerDTO);
@@ -60,13 +60,13 @@ public class PerfumerController {
 
 
     @PostMapping("/perfumers")
-    public ResponseEntity<PerfumerDTO> save(@Valid @RequestBody PerfumerDTO perfumer) {
-        PerfumerDTO perfumerDTO = service.create(perfumer);
+    public ResponseEntity<Perfumer> save(@Valid @RequestBody PerfumerDTO perfumer) {
+        Perfumer perfumerDTO = service.create(perfumer);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(perfumerDTO.id())
+                .buildAndExpand(perfumerDTO.getId())
                 .toUri();
 
         return ResponseEntity

@@ -34,8 +34,7 @@ public class PerfumerCompanyServiceImpl implements PerfumerCompanyService {
         Perfumer perfumer = repo.findById(perfumerId)
                 .orElseThrow(() -> new IllegalStateException("Perfumer with id " + perfumerId + " not found"));
 
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new CompanyNotFoundException("Company with id " + companyId + " not found"));
+        Company company = getPerfumerCompany(companyId);
         perfumer.setCompany(company);
 
         repo.saveAndFlush(perfumer);
@@ -51,5 +50,11 @@ public class PerfumerCompanyServiceImpl implements PerfumerCompanyService {
         perfumer.setCompany(null);
 
         repo.saveAndFlush(perfumer);
+    }
+
+    // Helper method to get company by id
+    public Company getPerfumerCompany(long companyId) {
+        return companyRepository.findById(companyId)
+                .orElseThrow(() -> new CompanyNotFoundException("Company with id " + companyId + " not found"));
     }
 }
