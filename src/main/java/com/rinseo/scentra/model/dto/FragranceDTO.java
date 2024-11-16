@@ -14,6 +14,8 @@ public record FragranceDTO(
         @Min(value = 1900, message = "Year must be greater than 1900.")
         @Max(value = 2025, message = "Year must be less than 2026.") int year,
         @Nullable
+        String imageUrl,
+        @Nullable
         Long brandId,
         @Nullable
         Long countryId,
@@ -23,7 +25,7 @@ public record FragranceDTO(
         Set<Long> concentrationIds,
         @Nullable
         Set<Long> noteIds) {
-    public FragranceDTO(Long id, String name, int year) {
-        this(id, name, year, null, null, null, null, null);
+    public FragranceDTO(Long id, String name, int year, String imageUrl) {
+        this(id, name, year, imageUrl,null, null, null, null, null);
     }
 }

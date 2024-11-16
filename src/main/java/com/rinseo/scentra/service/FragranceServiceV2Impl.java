@@ -54,6 +54,11 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
             throw new UniqueViolationException("Fragrance with name: " + fragrance.name() + " already exists");
         }
 
+        // Set default image if not provided
+        if (fragranceEntity.getImageUrl() == null || fragranceEntity.getImageUrl().isBlank()) {
+            fragranceEntity.setImageUrl("https://res.cloudinary.com/dx09tdgnz/image/upload/v1731762217/scentra/fragrance/fragrance_iswvjk.png");
+        }
+
         updateMetadata(fragranceEntity, fragrance);
 
         return repo.saveAndFlush(fragranceEntity);
@@ -132,6 +137,10 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
         foundFragrance.setName(fragrance.name());
         foundFragrance.setYear(fragrance.year());
+
+        if (fragrance.imageUrl() != null && !fragrance.imageUrl().isBlank()) {
+            foundFragrance.setImageUrl(fragrance.imageUrl());
+        }
 
         updateMetadata(foundFragrance, fragrance);
 

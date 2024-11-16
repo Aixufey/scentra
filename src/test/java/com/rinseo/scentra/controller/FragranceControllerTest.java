@@ -59,7 +59,7 @@ class FragranceControllerTest {
     @DisplayName("Fragrance can be saved")
     void testSaveFragrance_whenFragranceIsValid_thenReturnFragranceDetails() throws Exception {
         // Arrange
-        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2021);
+        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2021, "https://www.kicks.no/globalassets/integrationimages/36142739541672.jpg?hasAlpha=false&w=640&preset=background");
         Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
         // Integration test with service layer, the service layer is mocked
@@ -84,13 +84,16 @@ class FragranceControllerTest {
         Assertions.assertEquals(fragranceRequest.getYear(), createdFragrance.getYear(),
                 "The request year and response year should be the same");
 
+        Assertions.assertEquals(fragranceRequest.getImageUrl(), createdFragrance.getImageUrl(),
+                "The request image URL and response image URL should be the same");
+
     }
 
     @Test
     @DisplayName("Fragrance year validation")
     void testSaveFragrance_whenYearIsInvalid_thenReturnBadRequest() throws Exception {
         // Arrange
-        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2027);
+        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2027, "");
         Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
 
         when(service.create(any(FragranceDTO.class))).thenReturn(fragranceRequest);

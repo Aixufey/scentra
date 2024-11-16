@@ -7,15 +7,15 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+//@Service
 public class FragranceService {
     private static final List<Fragrance> fragrances = new ArrayList<>();
     private static long fragranceCount = 0;
 
     static {
-        fragrances.add(new Fragrance(++fragranceCount, "Acqua Di Gio", 2015));
-        fragrances.add(new Fragrance(++fragranceCount, "Dior Sauvage", 2016));
-        fragrances.add(new Fragrance(++fragranceCount, "Bleu De Chanel", 2014));
+        fragrances.add(new Fragrance(++fragranceCount, "Acqua Di Gio", 2015, ""));
+        fragrances.add(new Fragrance(++fragranceCount, "Dior Sauvage", 2016, ""));
+        fragrances.add(new Fragrance(++fragranceCount, "Bleu De Chanel", 2014, ""));
     }
 
     public List<Fragrance> getAll() {
