@@ -29,6 +29,8 @@ public class Fragrance implements Serializable {
     @Max(value = 2025, message = "Year must be less than 2026.")
     @Column(name = "\"year\"")
     private int year;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     // Bidirectional relationship with Brand
     // Cascade type is set to PERSIST and MERGE
@@ -70,10 +72,11 @@ public class Fragrance implements Serializable {
     public Fragrance() {
     }
 
-    public Fragrance(Long id, String name, int year) {
+    public Fragrance(Long id, String name, int year, String imageUrl) {
         this.id = id;
         this.name = name;
         this.year = year;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -98,6 +101,14 @@ public class Fragrance implements Serializable {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Brand getBrand() {
@@ -146,6 +157,7 @@ public class Fragrance implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", year=" + year +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", brand=" + brand +
                 ", country=" + country +
                 '}';

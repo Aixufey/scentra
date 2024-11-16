@@ -378,24 +378,24 @@ SELECT 'Maison Francis Kurkdjian',
        (SELECT company_id FROM company WHERE name = 'LVMH');
 
 -- Insert perfumers
-INSERT INTO perfumer (name, company_id, country_id)
-SELECT 'Alberto Morillas',
+INSERT INTO perfumer (name, image_url, company_id, country_id)
+SELECT 'Alberto Morillas', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753108/scentra/perfumer/am_zzhei1.jpg',
        (SELECT company_id FROM company WHERE name = 'Firmenich'),
        (SELECT country_id FROM country WHERE name = 'Spain');
-INSERT INTO perfumer (name, company_id, country_id)
-SELECT 'Jacques Polge',
+INSERT INTO perfumer (name, image_url, company_id, country_id)
+SELECT 'Jacques Polge', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753111/scentra/perfumer/jp_pvkeet.jpg',
        (SELECT company_id FROM company WHERE name = 'Chanel'),
        (SELECT country_id FROM country WHERE name = 'France');
-INSERT INTO perfumer (name, company_id, country_id)
-SELECT 'Francis Kurkdjian',
+INSERT INTO perfumer (name, image_url, company_id, country_id)
+SELECT 'Francis Kurkdjian', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753110/scentra/perfumer/fk_cvgcdh.jpg',
        (SELECT company_id FROM company WHERE name = 'LVMH'),
        (SELECT country_id FROM country WHERE name = 'France');
-INSERT INTO perfumer (name, company_id, country_id)
-SELECT 'Olivier Cresp',
+INSERT INTO perfumer (name, image_url, company_id, country_id)
+SELECT 'Olivier Cresp', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753109/scentra/perfumer/oc_kckk0q.jpg',
        (SELECT company_id FROM company WHERE name = 'Puig'),
        (SELECT country_id FROM country WHERE name = 'France');
-INSERT INTO perfumer (name, company_id, country_id)
-SELECT 'Thierry Wasser',
+INSERT INTO perfumer (name, image_url, company_id, country_id)
+SELECT 'Thierry Wasser', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753108/scentra/perfumer/tw_ccalou.jpg',
        (SELECT company_id FROM company WHERE name = 'LVMH'),
        (SELECT country_id FROM country WHERE name = 'France');
 
@@ -426,24 +426,24 @@ SELECT (SELECT perfumer_id FROM perfumer WHERE name = 'Thierry Wasser'),
 
 
 -- Insert fragrances
-INSERT INTO fragrance (name, "year", brand_id, country_id)
+INSERT INTO fragrance (name, "year", image_url, brand_id, country_id)
 SELECT 'Acqua di Giò Profumo',
-       2015,
+       2015, 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731754248/scentra/fragrance/profumo_a9psvy.jpg',
        (SELECT brand_id FROM brand WHERE name = 'Giorgio Armani'),
        (SELECT country_id FROM country WHERE name = 'Italy');
-INSERT INTO fragrance (name, "year", brand_id, country_id)
+INSERT INTO fragrance (name, "year", image_url, brand_id, country_id)
 SELECT 'Acqua di Giò Profondo',
-       2020,
+       2020, 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731754247/scentra/fragrance/profondo_hksghw.jpg',
        (SELECT brand_id FROM brand WHERE name = 'Giorgio Armani'),
        (SELECT country_id FROM country WHERE name = 'Italy');
-INSERT INTO fragrance (name, "year", brand_id, country_id)
+INSERT INTO fragrance (name, "year", image_url, brand_id, country_id)
 SELECT 'Gucci Guilty Absolute',
-       2017,
+       2017, 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731754248/scentra/fragrance/absolute_m94xqq.jpg',
        (SELECT brand_id FROM brand WHERE name = 'Gucci'),
        (SELECT country_id FROM country WHERE name = 'Italy');
-INSERT INTO fragrance (name, "year", brand_id, country_id)
+INSERT INTO fragrance (name, "year", image_url, brand_id, country_id)
 SELECT 'Baccarat Rouge 540',
-       2015,
+       2015, 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731754247/scentra/fragrance/540_vsjryv.webp',
        (SELECT brand_id FROM brand WHERE name = 'Maison Francis Kurkdjian'),
        (SELECT country_id FROM country WHERE name = 'France');
 

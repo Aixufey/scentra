@@ -30,6 +30,8 @@ public class Perfumer implements Serializable {
     @NotBlank(message = "Perfumer name is required.")
     @Column(unique = true)
     private String name;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @ManyToMany(mappedBy = "perfumers", fetch = FetchType.LAZY)
     @JsonBackReference          // Prevents recursive serialization JSON
@@ -61,7 +63,9 @@ public class Perfumer implements Serializable {
 //    @JsonManagedReference
     private Country country;
 
-    public Perfumer(String name) {
+
+    public Perfumer(String name, String imageUrl) {
         this.name = name;
+        this.imageUrl = imageUrl;
     }
 }
