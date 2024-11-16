@@ -106,6 +106,12 @@ public class PerfumerServiceImpl implements PerfumerService {
                 .orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
         foundPerfumer.setName(perfumer.name());
 
+        if (perfumer.imageUrl() != null && !perfumer.imageUrl().isBlank()) {
+            foundPerfumer.setImageUrl(perfumer.imageUrl());
+        }
+
+        updateMetadata(perfumer, foundPerfumer);
+
         return repo.saveAndFlush(foundPerfumer);
     }
 
