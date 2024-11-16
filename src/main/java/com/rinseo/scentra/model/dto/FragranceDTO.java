@@ -26,6 +26,6 @@ public record FragranceDTO(
         @Nullable
         Set<Long> noteIds) {
     public FragranceDTO(Long id, String name, int year, String imageUrl) {
-        this(id, name, year, imageUrl,null, null, null, null, null);
+        this(id, name, year, imageUrl, null, null, null, null, null);
     }
 }
