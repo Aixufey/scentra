@@ -29,21 +29,21 @@ public class BrandController {
     }
 
     @PutMapping("/brands/{id}")
-    public ResponseEntity<BrandDTO> update(@PathVariable long id, @Valid @RequestBody BrandDTO brand) {
-        BrandDTO brandDTO = service.update(id, brand);
+    public ResponseEntity<Brand> update(@PathVariable long id, @Valid @RequestBody BrandDTO brand) {
+        Brand brandDTO = service.update(id, brand);
 
         return ResponseEntity
                 .ok(brandDTO);
     }
 
     @PostMapping("/brands")
-    public ResponseEntity<BrandDTO> create(@Valid @RequestBody BrandDTO brand) {
-        BrandDTO brandDTO = service.create(brand);
+    public ResponseEntity<Brand> create(@Valid @RequestBody BrandDTO brand) {
+        Brand brandDTO = service.create(brand);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(brandDTO.id())
+                .buildAndExpand(brandDTO.getId())
                 .toUri();
 
         return ResponseEntity

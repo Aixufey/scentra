@@ -10,9 +10,11 @@ public interface BrandService {
 
     Brand getById(long id);
 
-    BrandDTO update(long id, BrandDTO brand);
+    Brand getByName(String name);
 
-    BrandDTO create(BrandDTO brand);
+    Brand update(long id, BrandDTO brand);
+
+    Brand create(BrandDTO brand);
 
     void delete(long id);
 }
