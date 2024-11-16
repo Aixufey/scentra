@@ -78,12 +78,12 @@ public class PerfumerBrandServiceImpl implements PerfumerBrandService {
         Set<Brand> brands = perfumer.getBrands();
         for (var brand : brands) {
             brand.getPerfumers().remove(perfumer);
-            brandRepository.saveAndFlush(brand);
         }
         // Clear perfumer's collection of brands
         perfumer.getBrands().clear();
 
-        perfumerRepository.save(perfumer);
+        brandRepository.saveAllAndFlush(brands);
+        perfumerRepository.saveAndFlush(perfumer);
     }
 
     private List<Brand> getBrands(long perfumerId) {

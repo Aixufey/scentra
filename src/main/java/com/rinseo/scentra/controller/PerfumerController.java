@@ -107,6 +107,15 @@ public class PerfumerController {
                 .build();
     }
 
+    @DeleteMapping("/perfumers/{id}/fragrances")
+    public ResponseEntity<Void> deleteAllFragranceRelation(@PathVariable long id) {
+        perfumerFragranceService.deleteAll(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
     /////////////////////////// BRAND INVERSE RELATIONSHIP ///////////////////////////
     @GetMapping("/perfumers/{id}/brands")
     public ResponseEntity<List<Brand>> getPerfumerBrands(@PathVariable long id) {
@@ -125,6 +134,15 @@ public class PerfumerController {
     @DeleteMapping("/perfumers/{id}/brands/{brandId}")
     public ResponseEntity<Void> deleteBrandRelation(@PathVariable long id, @PathVariable long brandId) {
         perfumerBrandService.deleteBrand(id, brandId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @DeleteMapping("/perfumers/{id}/brands")
+    public ResponseEntity<Void> deleteAllBrandRelation(@PathVariable long id) {
+        perfumerBrandService.deleteAll(id);
 
         return ResponseEntity
                 .noContent()

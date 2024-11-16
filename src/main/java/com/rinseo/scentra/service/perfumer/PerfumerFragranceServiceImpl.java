@@ -73,7 +73,7 @@ public class PerfumerFragranceServiceImpl implements PerfumerFragranceService {
 
         // Save changes on both sides to persist the relationship
         perfumerRepository.saveAndFlush(perfumer);
-        fragranceRepository.saveAll(foundFragrances);
+        fragranceRepository.saveAllAndFlush(foundFragrances);
 
         return List.copyOf(perfumer.getFragrances());
     }
@@ -111,11 +111,11 @@ public class PerfumerFragranceServiceImpl implements PerfumerFragranceService {
         Set<Fragrance> fragrances = perfumer.getFragrances();
         for (var frag : fragrances) {
             frag.getPerfumers().remove(perfumer);
-            fragranceRepository.saveAndFlush(frag);
         }
         // Clear perfumer's collection of fragrances
         perfumer.getFragrances().clear();
 
+        fragranceRepository.saveAllAndFlush(fragrances);
         perfumerRepository.saveAndFlush(perfumer);
     }
 
