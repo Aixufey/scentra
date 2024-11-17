@@ -30,6 +30,8 @@ public class Company implements Serializable {
     @NotBlank(message = "Company name is required.")
     @Column(unique = true)
     private String name;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "country_id", referencedColumnName = "country_id")
@@ -52,7 +54,8 @@ public class Company implements Serializable {
 //    @JsonBackReference
     private Set<Brand> brands = new HashSet<>();
 
-    public Company(String name) {
+    public Company(String name, String imageUrl) {
         this.name = name;
+        this.imageUrl = imageUrl;
     }
 }

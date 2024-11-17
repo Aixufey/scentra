@@ -294,40 +294,48 @@ VALUES ('EDC', 'eau de cologne'),
        ('Parfum', 'extrait de parfum');
 
 -- Insert companies
-INSERT INTO company (name, country_id)
-SELECT 'LVMH', country_id
+INSERT INTO company (name, country_id, image_url)
+SELECT 'LVMH', country_id, 'lvmh_ghpdoj.png'
 FROM country
 WHERE name = 'France';
-INSERT INTO company (name, country_id)
-SELECT 'Estée Lauder Companies', country_id
+
+INSERT INTO company (name, country_id, image_url)
+SELECT 'Estée Lauder Companies', country_id, 'esteelauder_stymqo.png'
 FROM country
 WHERE name = 'United States of America';
-INSERT INTO company (name, country_id)
-SELECT 'Coty Inc.', country_id
+
+INSERT INTO company (name, country_id, image_url)
+SELECT 'Coty Inc.', country_id, 'coty_aozg1j.png'
 FROM country
 WHERE name = 'United States of America';
-INSERT INTO company (name, country_id)
-SELECT 'Procter & Gamble', country_id
+
+INSERT INTO company (name, country_id, image_url)
+SELECT 'Procter & Gamble', country_id, 'pg_ukvpqo.png'
 FROM country
 WHERE name = 'United States of America';
-INSERT INTO company (name, country_id)
-SELECT 'Shiseido', country_id
+
+INSERT INTO company (name, country_id, image_url)
+SELECT 'Shiseido', country_id, 'shiseido_zsnwsp.png'
 FROM country
 WHERE name = 'Japan';
-INSERT INTO company (name, country_id)
-SELECT 'L’Oréal', country_id
+
+INSERT INTO company (name, country_id, image_url)
+SELECT 'L’Oréal', country_id, 'loreal_ezjuus.png'
 FROM country
 WHERE name = 'France';
-INSERT INTO company (name, country_id)
-SELECT 'Chanel', country_id
+
+INSERT INTO company (name, country_id, image_url)
+SELECT 'Chanel', country_id, 'chanel_pljkkq.png'
 FROM country
 WHERE name = 'France';
-INSERT INTO company (name, country_id)
-SELECT 'Puig', country_id
+
+INSERT INTO company (name, country_id, image_url)
+SELECT 'Puig', country_id, 'puig_atnw42.jpg'
 FROM country
 WHERE name = 'Spain';
-INSERT INTO company (name, country_id)
-SELECT 'Firmenich', country_id
+
+INSERT INTO company (name, country_id, image_url)
+SELECT 'Firmenich', country_id, 'firmenich_j06uep.jpg'
 FROM country
 WHERE name = 'Switzerland';
 

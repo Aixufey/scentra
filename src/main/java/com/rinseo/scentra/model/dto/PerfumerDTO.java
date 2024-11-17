@@ -18,7 +18,7 @@ public record PerfumerDTO(
         Set<Long> fragranceIds,
         @Nullable
         Set<Long> brandIds) {
-        public PerfumerDTO(long id, String name) {
-                this(id, name, null, null, null, null, null);
-        }
+    public PerfumerDTO(long id, String name) {
+        this(id, name, null, null, null, null, null);
+    }
 }
