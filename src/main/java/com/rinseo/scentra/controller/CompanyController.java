@@ -3,10 +3,12 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.model.Company;
 import com.rinseo.scentra.model.dto.CompanyDTO;
 import com.rinseo.scentra.service.CompanyServiceImpl;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -36,9 +38,11 @@ public class CompanyController {
                 .ok(companyDTO);
     }
 
-    @PostMapping("/companies")
-    public ResponseEntity<CompanyDTO> create(@Valid @RequestBody CompanyDTO company) {
-        CompanyDTO companyDTO = service.create(company);
+    @PostMapping(value = "/companies", consumes = {"multipart/form-data"})
+    public ResponseEntity<CompanyDTO> create(
+            @Valid @RequestPart(value = "company") CompanyDTO company,
+            @Nullable @RequestPart(value = "file") MultipartFile file) {
+        CompanyDTO companyDTO = service.create(company, file);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

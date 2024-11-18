@@ -8,6 +8,7 @@ import com.rinseo.scentra.utils.EntityTransformer;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository repo;
     private final ModelMapper modelMapper;
     private final EntityTransformer entityTransformer;
+    private final CloudinaryServiceImpl cloudinaryService;
 
     @Override
     public List<Company> getAll() {
@@ -36,16 +38,19 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDTO create(CompanyDTO company) {
+    public CompanyDTO create(CompanyDTO company, MultipartFile file) {
         Company companyEntity = modelMapper.map(company, Company.class);
 
-        if (company.imageUrl() == null || company.imageUrl().isBlank()) {
+        if (file != null) {
+            String publicId = cloudinaryService.uploadImageFile(file, "scentra/company");
+            companyEntity.setImageUrl(publicId);
+        } else {
+            // Default image
             companyEntity.setImageUrl("company_jfnnwj.png");
         }
 
         Company savedCompany = repo.saveAndFlush(companyEntity);
 
-        // CDN has to be configured to upload images
         return new CompanyDTO(savedCompany.getId(), savedCompany.getName(), savedCompany.getImageUrl());
     }
 
