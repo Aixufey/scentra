@@ -15,6 +15,7 @@ public class CloudinaryConfig {
      * Get Cloudinary instance by providing the environment variable name
      * It will attempt to get the API key from .env file during development
      * otherwise it will get the API key from system environment variable in production
+     *
      * @param variable The environment variable name
      * @return Cloudinary instance
      */

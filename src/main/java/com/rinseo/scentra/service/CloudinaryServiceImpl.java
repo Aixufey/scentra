@@ -23,7 +23,8 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     /**
      * Upload image file to cloudinary
      * Must provide a valid cloudinary API key via .env or system environment variable
-     * @param file MultipartFile
+     *
+     * @param file   MultipartFile
      * @param folder The folder structure in cloudinary
      * @return The public id of the uploaded image
      */
