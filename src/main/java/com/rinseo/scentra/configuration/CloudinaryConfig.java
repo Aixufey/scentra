@@ -23,7 +23,11 @@ public class CloudinaryConfig {
         String cloudinaryUrl = getSystemEnv(variable);
         // If not found, check for .env file
         if (cloudinaryUrl == null) {
-            cloudinaryUrl = Dotenv.load().get(variable);
+            try {
+                cloudinaryUrl = Dotenv.load().get(variable);
+            } catch (Exception e) {
+                throw new RuntimeException("Could not find Cloudinary API key from system environment or .env file");
+            }
         }
         // If both are not found, throw exception
         if (cloudinaryUrl == null) {
