@@ -33,6 +33,8 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B clean install -Ddependency-check.skip=true --file pom.xml
+      env:
+        CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
 
     - name: Publish to GitHub Packages
       run: mvn deploy -Ddependency-check.skip=true -Dusername=${{ github.actor }} -Dpassword=${{ secrets.REPO_SECRET }}
