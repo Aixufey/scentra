@@ -40,6 +40,7 @@ jobs:
       run: mvn deploy -Ddependency-check.skip=true -Dusername=${{ github.actor }} -Dpassword=${{ secrets.REPO_SECRET }}
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_SECRET }}
+        CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
 
 
 #    - name: Run OWASP Dependency Check
