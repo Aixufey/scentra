@@ -55,13 +55,14 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDTO update(long id, CompanyDTO company) {
+    public CompanyDTO update(long id, CompanyDTO company, MultipartFile file) {
         Company foundCompany = repo.findById(id)
                 .orElseThrow(() -> new CompanyNotFoundException("Company with id " + id + " not found"));
         foundCompany.setName(company.name());
 
-        if (company.imageUrl() != null && !company.imageUrl().isBlank()) {
-            foundCompany.setImageUrl(company.imageUrl());
+        if (file != null) {
+            String publicId = cloudinaryService.uploadImageFile(file, "scentra/company");
+            foundCompany.setImageUrl(publicId);
         }
 
         Company updatedCompany = repo.saveAndFlush(foundCompany);

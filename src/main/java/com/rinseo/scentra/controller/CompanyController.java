@@ -31,8 +31,11 @@ public class CompanyController {
     }
 
     @PutMapping("/companies/{id}")
-    public ResponseEntity<CompanyDTO> update(@PathVariable long id, @Valid @RequestBody CompanyDTO company) {
-        CompanyDTO companyDTO = service.update(id, company);
+    public ResponseEntity<CompanyDTO> update(
+            @PathVariable long id,
+            @Valid @RequestPart(value = "company") CompanyDTO company,
+            @Nullable @RequestPart(value = "file") MultipartFile file) {
+        CompanyDTO companyDTO = service.update(id, company, file);
 
         return ResponseEntity
                 .ok(companyDTO);

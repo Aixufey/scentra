@@ -13,7 +13,7 @@ public interface CompanyService {
 
     CompanyDTO create(CompanyDTO company, MultipartFile file);
 
-    CompanyDTO update(long id, CompanyDTO company);
+    CompanyDTO update(long id, CompanyDTO company, MultipartFile file);
 
     void delete(long id);
 }
