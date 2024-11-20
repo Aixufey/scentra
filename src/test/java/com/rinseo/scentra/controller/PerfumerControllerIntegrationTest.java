@@ -11,8 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(
         locations = "/application-test.properties")
@@ -28,11 +31,17 @@ class PerfumerControllerIntegrationTest {
         perfumerJSON.put("id", 1L);
         perfumerJSON.put("name", "Jo Malone");
 
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("name", "Jo Malone");
+
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        //httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        //httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
         httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-        HttpEntity<String> request = new HttpEntity<>(perfumerJSON.toString(), httpHeaders);
+//        HttpEntity<String> request = new HttpEntity<>(perfumerJSON.toString(), httpHeaders);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(formData, httpHeaders);
 
         // Act
         ResponseEntity<PerfumerDTO> createdEntity = restTemplate.exchange("/api/v1/perfumers",
@@ -45,7 +54,7 @@ class PerfumerControllerIntegrationTest {
 
         // Assert
         Assertions.assertEquals(HttpStatus.CREATED, statusCode);
-        Assertions.assertEquals(perfumerDetails.name(), "Jo Malone");
+        Assertions.assertEquals(perfumerDetails.getName(), "Jo Malone");
     }
 
 }

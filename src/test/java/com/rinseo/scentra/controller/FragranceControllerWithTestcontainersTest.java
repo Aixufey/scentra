@@ -13,6 +13,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -108,14 +110,22 @@ class FragranceControllerWithTestcontainersTest {
     @DisplayName("Perfumer can be created")
     void testCreatePerfumer() throws JSONException {
         // Arrange
-        JSONObject perfumerJSON = new JSONObject();
-        perfumerJSON.put("name", "Alberto Morillas");
+        //JSONObject perfumerJSON = new JSONObject();
+        //perfumerJSON.put("name", "Alberto Morillas");
+
+        // Create a form data - Database is empty, so only testing name
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("name", "Alberto Morillas");
+
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON, MediaType.MULTIPART_FORM_DATA));
+//        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+//        httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-        HttpEntity<String> request = new HttpEntity<>(perfumerJSON.toString(), httpHeaders);
+        //HttpEntity<String> request = new HttpEntity<>(perfumerJSON.toString(), httpHeaders);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(formData, httpHeaders);
 
         // Act
         ResponseEntity<PerfumerDTO> createdEntity = restTemplate.exchange("/api/v1/perfumers",
@@ -128,6 +138,6 @@ class FragranceControllerWithTestcontainersTest {
 
         // Assert
         assertEquals(HttpStatus.CREATED, statusCode);
-        assertEquals(perfumerDetails.name(), "Alberto Morillas");
+        assertEquals(perfumerDetails.getName(), "Alberto Morillas");
     }
 }
