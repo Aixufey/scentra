@@ -387,23 +387,23 @@ SELECT 'Maison Francis Kurkdjian', 'https://res.cloudinary.com/dx09tdgnz/image/u
 
 -- Insert perfumers
 INSERT INTO perfumer (name, image_url, company_id, country_id)
-SELECT 'Alberto Morillas', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753108/scentra/perfumer/am_zzhei1.jpg',
+SELECT 'Alberto Morillas', 'am_zzhei1.jpg',
        (SELECT company_id FROM company WHERE name = 'Firmenich'),
        (SELECT country_id FROM country WHERE name = 'Spain');
 INSERT INTO perfumer (name, image_url, company_id, country_id)
-SELECT 'Jacques Polge', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753111/scentra/perfumer/jp_pvkeet.jpg',
+SELECT 'Jacques Polge', 'jp_pvkeet.jpg',
        (SELECT company_id FROM company WHERE name = 'Chanel'),
        (SELECT country_id FROM country WHERE name = 'France');
 INSERT INTO perfumer (name, image_url, company_id, country_id)
-SELECT 'Francis Kurkdjian', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753110/scentra/perfumer/fk_cvgcdh.jpg',
+SELECT 'Francis Kurkdjian', 'fk_cvgcdh.jpg',
        (SELECT company_id FROM company WHERE name = 'LVMH'),
        (SELECT country_id FROM country WHERE name = 'France');
 INSERT INTO perfumer (name, image_url, company_id, country_id)
-SELECT 'Olivier Cresp', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753109/scentra/perfumer/oc_kckk0q.jpg',
+SELECT 'Olivier Cresp', 'oc_kckk0q.jpg',
        (SELECT company_id FROM company WHERE name = 'Puig'),
        (SELECT country_id FROM country WHERE name = 'France');
 INSERT INTO perfumer (name, image_url, company_id, country_id)
-SELECT 'Thierry Wasser', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731753108/scentra/perfumer/tw_ccalou.jpg',
+SELECT 'Thierry Wasser', 'tw_ccalou.jpg',
        (SELECT company_id FROM company WHERE name = 'LVMH'),
        (SELECT country_id FROM country WHERE name = 'France');
 

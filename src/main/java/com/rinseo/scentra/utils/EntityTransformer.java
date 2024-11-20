@@ -2,6 +2,7 @@ package com.rinseo.scentra.utils;
 
 import com.rinseo.scentra.configuration.CDNConfig;
 import com.rinseo.scentra.model.Company;
+import com.rinseo.scentra.model.Perfumer;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,15 @@ public class EntityTransformer {
         if (entity instanceof Company company && map instanceof Company companyMap) {
             String imageUrl = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
             companyMap.setImageUrl(imageUrl);
+        }
+
+        if (entity instanceof Perfumer perfumer && map instanceof Perfumer perfumerMap) {
+            String imageUrl = urlBuilder(cdnConfig.getPerfumerUrl(), perfumer.getImageUrl());
+            perfumerMap.setImageUrl(imageUrl);
+            if (perfumer.getCompany() != null) {
+                String companyImageUrl = urlBuilder(cdnConfig.getCompanyUrl(), perfumer.getCompany().getImageUrl());
+                perfumerMap.getCompany().setImageUrl(companyImageUrl);
+            }
         }
 
         return map;

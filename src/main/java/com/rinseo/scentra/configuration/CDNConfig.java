@@ -16,6 +16,8 @@ public class CDNConfig {
     private String baseUrl;
     @Value("${cdn.company}")
     private String companyUrl;
+    @Value("${cdn.perfmer}")
+    private String perfumerUrl;
 
     public String getBaseUrl(String relativePath) {
         return baseUrl + relativePath;
