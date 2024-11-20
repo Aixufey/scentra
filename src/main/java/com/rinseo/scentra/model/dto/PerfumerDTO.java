@@ -2,23 +2,32 @@ package com.rinseo.scentra.model.dto;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-public record PerfumerDTO(
-        Long id,
-        @NotBlank(message = "Perfumer name is required.") String name,
-        @Nullable
-        String imageUrl,
-        @Nullable
-        Long companyId,
-        @Nullable
-        Long countryId,
-        @Nullable
-        Set<Long> fragranceIds,
-        @Nullable
-        Set<Long> brandIds) {
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+public class PerfumerDTO {
+    private Long id;
+    @NotBlank(message = "Perfumer name is required.")
+    private String name;
+    @Nullable
+    private String imageUrl;
+    @Nullable
+    private Long companyId;
+    @Nullable
+    private Long countryId;
+    @Nullable
+    private Set<Long> fragranceIds;
+    @Nullable
+    private Set<Long> brandIds;
+
     public PerfumerDTO(long id, String name) {
-        this(id, name, null, null, null, null, null);
+        this.id = id;
+        this.name = name;
     }
 }

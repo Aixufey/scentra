@@ -7,11 +7,13 @@ import com.rinseo.scentra.service.perfumer.PerfumerBrandServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerCompanyServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerCountryServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerFragranceServiceImpl;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -51,8 +53,11 @@ public class PerfumerController {
     }
 
     @PutMapping("/perfumers/{id}")
-    public ResponseEntity<Perfumer> update(@PathVariable long id, @Valid @RequestBody PerfumerDTO perfumer) {
-        Perfumer perfumerDTO = service.update(id, perfumer);
+    public ResponseEntity<Perfumer> update(
+            @PathVariable long id,
+            @Valid @ModelAttribute PerfumerDTO perfumer,
+            @Nullable @RequestPart(value = "file") MultipartFile file) {
+        Perfumer perfumerDTO = service.update(id, perfumer, file);
 
         return ResponseEntity
                 .ok(perfumerDTO);
@@ -60,8 +65,11 @@ public class PerfumerController {
 
 
     @PostMapping("/perfumers")
-    public ResponseEntity<Perfumer> save(@Valid @RequestBody PerfumerDTO perfumer) {
-        Perfumer perfumerDTO = service.create(perfumer);
+    public ResponseEntity<Perfumer> save(
+            @Valid @ModelAttribute PerfumerDTO perfumer,
+            @Nullable @RequestPart(value = "file") MultipartFile file) {
+
+        Perfumer perfumerDTO = service.create(perfumer, file);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

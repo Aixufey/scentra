@@ -1,5 +1,6 @@
 package com.rinseo.scentra.service;
 
+import com.rinseo.scentra.configuration.CDNConfig;
 import com.rinseo.scentra.exception.PerfumerNotFoundException;
 import com.rinseo.scentra.exception.UniqueViolationException;
 import com.rinseo.scentra.model.*;
@@ -9,10 +10,12 @@ import com.rinseo.scentra.service.perfumer.PerfumerBrandServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerCompanyServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerCountryServiceImpl;
 import com.rinseo.scentra.service.perfumer.PerfumerFragranceServiceImpl;
+import com.rinseo.scentra.utils.EntityTransformer;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,34 +31,52 @@ public class PerfumerServiceImpl implements PerfumerService {
     private final PerfumerCountryServiceImpl perfumerCountryService;
     private final PerfumerCompanyServiceImpl perfumerCompanyService;
     private final ModelMapper modelMapper;
+    private final CloudinaryServiceImpl cloudinaryService;
+    private final EntityTransformer entityTransformer;
 
     @Override
     public List<Perfumer> getAll() {
-        return repo.findAll();
+        List<Perfumer> perfumers = repo.findAll();
+        return perfumers.stream()
+                .map(p -> entityTransformer
+                        .mapEntityUrl(p, Perfumer.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Perfumer getById(long id) {
-        return repo.findById(id).orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
+        Perfumer perfumer = repo.findById(id).orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
+        return entityTransformer.mapEntityUrl(perfumer, Perfumer.class);
     }
 
     @Override
     public List<Perfumer> getByName(String name) {
-        return repo.findByNameContainingIgnoreCase(name);
+        List<Perfumer> perfumers = repo.findByNameContainingIgnoreCase(name);
+        return perfumers.stream()
+                .map(p -> entityTransformer
+                        .mapEntityUrl(p, Perfumer.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public Perfumer create(PerfumerDTO perfumer) {
+    public Perfumer create(PerfumerDTO perfumer, MultipartFile file) {
         Perfumer perfumerEntity = modelMapper.map(perfumer, Perfumer.class);
-        Perfumer byName = repo.findByNameEqualsIgnoreCase(perfumer.name());
+        Perfumer byName = repo.findByNameEqualsIgnoreCase(perfumer.getName());
 
         if (byName != null) {
-            throw new UniqueViolationException("Perfumer with name: " + perfumer.name() + " already exists");
+            throw new UniqueViolationException("Perfumer with name: " + perfumer.getName() + " already exists");
         }
 
-        if (perfumerEntity.getImageUrl() == null || perfumerEntity.getImageUrl().isBlank()) {
-            perfumerEntity.setImageUrl("https://res.cloudinary.com/dx09tdgnz/image/upload/v1731762256/scentra/perfumer/perfumer_swoc8s.png");
+//        if (perfumerEntity.getImageUrl() == null || perfumerEntity.getImageUrl().isBlank()) {
+//            perfumerEntity.setImageUrl("https://res.cloudinary.com/dx09tdgnz/image/upload/v1731762256/scentra/perfumer/perfumer_swoc8s.png");
+//        }
+        if (file != null) {
+            String publicId = cloudinaryService.uploadImageFile(file, "scentra/perfumer");
+            perfumerEntity.setImageUrl(publicId);
+        } else {
+            // Default image
+            perfumerEntity.setImageUrl("perfumer_swoc8s.png");
         }
 
         updateMetadata(perfumer, perfumerEntity);
@@ -64,17 +85,17 @@ public class PerfumerServiceImpl implements PerfumerService {
     }
 
     private void updateMetadata(PerfumerDTO perfumer, Perfumer perfumerEntity) {
-        if (perfumer.companyId() != null) {
-            Company company = perfumerCompanyService.getPerfumerCompany(perfumer.companyId());
+        if (perfumer.getCompanyId() != null) {
+            Company company = perfumerCompanyService.getPerfumerCompany(perfumer.getCompanyId());
             perfumerEntity.setCompany(company);
         }
-        if (perfumer.countryId() != null) {
-            Country country = perfumerCountryService.getPerfumerCountry(perfumer.countryId());
+        if (perfumer.getCountryId() != null) {
+            Country country = perfumerCountryService.getPerfumerCountry(perfumer.getCountryId());
             perfumerEntity.setCountry(country);
         }
-        if (perfumer.fragranceIds() != null) {
+        if (perfumer.getFragranceIds() != null) {
             // If ids are provided, fetch the fragrances and set them
-            Set<Fragrance> fragrances = perfumer.fragranceIds()
+            Set<Fragrance> fragrances = perfumer.getFragranceIds()
                     .stream()
                     .map(perfumerFragranceService::getFragrance)
                     .filter(Objects::nonNull)
@@ -90,9 +111,9 @@ public class PerfumerServiceImpl implements PerfumerService {
                 fragrance.setPerfumers(perfumers);
             }
         }
-        if (perfumer.brandIds() != null) {
+        if (perfumer.getBrandIds() != null) {
             // Since Perfumer manages the relationship with brand, Hibernate will insert the relationship
-            Set<Brand> brands = perfumer.brandIds()
+            Set<Brand> brands = perfumer.getBrandIds()
                     .stream()
                     .map(perfumerBrandService::getBrand)
                     .filter(Objects::nonNull)
@@ -103,13 +124,17 @@ public class PerfumerServiceImpl implements PerfumerService {
 
     @Override
     @Transactional
-    public Perfumer update(long id, PerfumerDTO perfumer) {
+    public Perfumer update(long id, PerfumerDTO perfumer, MultipartFile file) {
         Perfumer foundPerfumer = repo.findById(id)
                 .orElseThrow(() -> new PerfumerNotFoundException("Perfumer not found with id: " + id));
-        foundPerfumer.setName(perfumer.name());
+        foundPerfumer.setName(perfumer.getName());
 
-        if (perfumer.imageUrl() != null && !perfumer.imageUrl().isBlank()) {
-            foundPerfumer.setImageUrl(perfumer.imageUrl());
+//        if (perfumer.getImageUrl() != null && !perfumer.getImageUrl().isBlank()) {
+//            foundPerfumer.setImageUrl(perfumer.getImageUrl());
+//        }
+        if (file != null) {
+            String publicId = cloudinaryService.uploadImageFile(file, "scentra/perfumer");
+            foundPerfumer.setImageUrl(publicId);
         }
 
         updateMetadata(perfumer, foundPerfumer);
