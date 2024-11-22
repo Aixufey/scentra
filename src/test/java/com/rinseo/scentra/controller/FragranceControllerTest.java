@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 
@@ -59,11 +60,12 @@ class FragranceControllerTest {
     @DisplayName("Fragrance can be saved")
     void testSaveFragrance_whenFragranceIsValid_thenReturnFragranceDetails() throws Exception {
         // Arrange
-        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2021, "https://www.kicks.no/globalassets/integrationimages/36142739541672.jpg?hasAlpha=false&w=640&preset=background");
-        Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
+        // FragranceData fragranceData = new FragranceData(1L, "Test Fragrance", 2021, "https://www.kicks.no/globalassets/integrationimages/36142739541672.jpg?hasAlpha=false&w=640&preset=background");
+        FragranceDTO testFragrance = new FragranceDTO(1L, "Test Fragrance", 2021);
+        Fragrance fragranceRequest = new ModelMapper().map(testFragrance, Fragrance.class);
 
         // Integration test with service layer, the service layer is mocked
-        when(service.create(any(FragranceDTO.class))).thenReturn(fragranceRequest);
+        when(service.create(any(FragranceDTO.class), eq(null))).thenReturn(fragranceRequest);
 
         // Testing with MockMvc with a POST request
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/fragrances")
@@ -93,10 +95,11 @@ class FragranceControllerTest {
     @DisplayName("Fragrance year validation")
     void testSaveFragrance_whenYearIsInvalid_thenReturnBadRequest() throws Exception {
         // Arrange
-        FragranceDTO fragranceDTO = new FragranceDTO(1L, "Test Fragrance", 2027, "");
-        Fragrance fragranceRequest = new ModelMapper().map(fragranceDTO, Fragrance.class);
+        //FragranceData fragranceData = new FragranceData(1L, "Test Fragrance", 2027, "");
+        FragranceDTO testFragrance = new FragranceDTO(1L, "Test Fragrance", 2027);
+        Fragrance fragranceRequest = new ModelMapper().map(testFragrance, Fragrance.class);
 
-        when(service.create(any(FragranceDTO.class))).thenReturn(fragranceRequest);
+        when(service.create(any(FragranceDTO.class), eq(null))).thenReturn(fragranceRequest);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/fragrances")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -85,12 +85,17 @@ class FragranceControllerWithTestcontainersTest {
         JSONObject fragranceJSON = new JSONObject();
         fragranceJSON.put("name", "Acqua di Giò Profumo");
         fragranceJSON.put("year", 2015);
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("name", "Acqua di Giò Profumo");
+        formData.add("year", 2015);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        //headers.setContentType(MediaType.APPLICATION_JSON);
+        //headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        HttpEntity<String> request = new HttpEntity<>(fragranceJSON.toString(), headers);
+//        HttpEntity<String> request = new HttpEntity<>(fragranceJSON.toString(), headers);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(formData, headers);
 
         // Act
         ResponseEntity<FragranceDTO> createdEntity = restTemplate.postForEntity("/api/v1/fragrances", request, FragranceDTO.class);
@@ -100,7 +105,7 @@ class FragranceControllerWithTestcontainersTest {
 
         // Assert
         assertEquals(HttpStatus.CREATED, statusCode);
-        assertEquals("Acqua di Giò Profumo", fragranceDetails.name()
+        assertEquals("Acqua di Giò Profumo", fragranceDetails.getName()
                 , "Fragrance name should be Acqua di Giò Profumo");
         assertEquals(MediaType.APPLICATION_JSON, header.getContentType());
     }

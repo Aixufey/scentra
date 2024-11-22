@@ -2,7 +2,6 @@ package com.rinseo.scentra.controller;
 
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
-
-import java.util.List;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 // This annotation will include all layers and load the application context.
 // It will create a mock servlet and will not start the server unless specified.
@@ -54,18 +53,24 @@ class FragranceControllerIntegrationTest {
         // Arrange
 
         // 1. Creating the request body
-        JSONObject fragranceJSON = new JSONObject();
-        fragranceJSON.put("id", 1L);
-        fragranceJSON.put("name", "Qaa'ed Al Shabaab");
-        fragranceJSON.put("year", 2021);
+        //JSONObject fragranceJSON = new JSONObject();
+        //fragranceJSON.put("id", 1L);
+        //fragranceJSON.put("name", "Qaa'ed Al Shabaab");
+        //fragranceJSON.put("year", 2021);
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("id", 1L);
+        formData.add("name", "Qaa'ed Al Shabaab");
+        formData.add("year", 2021);
 
         // 2. Set headers
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        //headers.setContentType(MediaType.APPLICATION_JSON);
+        //headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         // 3. To use http client we need to create the request.
-        HttpEntity<String> request = new HttpEntity<>(fragranceJSON.toString(), headers);
+        //HttpEntity<String> request = new HttpEntity<>(fragranceJSON.toString(), headers);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(formData, headers);
 
         // Act
         // Respond body will a JSON string, we will convert it back to JSON object.
@@ -77,7 +82,7 @@ class FragranceControllerIntegrationTest {
 
         // Assert
         Assertions.assertEquals(HttpStatus.CREATED, statusCode);
-        Assertions.assertEquals("Qaa'ed Al Shabaab", fragranceDetails.name()
+        Assertions.assertEquals("Qaa'ed Al Shabaab", fragranceDetails.getName()
                 , "Fragrance name should be Qaa'ed Al Shabaab");
         Assertions.assertEquals(MediaType.APPLICATION_JSON, header.getContentType());
     }
