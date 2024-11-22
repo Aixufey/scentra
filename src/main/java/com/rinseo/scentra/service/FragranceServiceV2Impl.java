@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
     private final FragranceConcentrationServiceImpl concentrationService;
     private final FragranceNoteServiceImpl noteService;
     private final ModelMapper modelMapper;
+    private final CloudinaryServiceImpl cloudinaryService;
 
     @Override
     public List<Fragrance> getAll() {
@@ -45,18 +47,24 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
 
     @Override
     @Transactional
-    public Fragrance create(FragranceDTO fragrance) {
+    public Fragrance create(FragranceDTO fragrance, MultipartFile file) {
         // Convert DTO to Entity
         Fragrance fragranceEntity = modelMapper.map(fragrance, Fragrance.class);
-        Fragrance byName = repo.findByName(fragrance.name());
+        Fragrance byName = repo.findByName(fragrance.getName());
 
         if (byName != null) {
-            throw new UniqueViolationException("Fragrance with name: " + fragrance.name() + " already exists");
+            throw new UniqueViolationException("Fragrance with name: " + fragrance.getName() + " already exists");
         }
 
         // Set default image if not provided
-        if (fragranceEntity.getImageUrl() == null || fragranceEntity.getImageUrl().isBlank()) {
-            fragranceEntity.setImageUrl("https://res.cloudinary.com/dx09tdgnz/image/upload/v1731762217/scentra/fragrance/fragrance_iswvjk.png");
+//        if (fragranceEntity.getImageUrl() == null || fragranceEntity.getImageUrl().isBlank()) {
+//            fragranceEntity.setImageUrl("https://res.cloudinary.com/dx09tdgnz/image/upload/v1731762217/scentra/fragrance/fragrance_iswvjk.png");
+//        }
+        if (file != null) {
+            String publicId = cloudinaryService.uploadImageFile(file, "scentra/fragrance");
+            fragranceEntity.setImageUrl(publicId);
+        } else {
+            fragranceEntity.setImageUrl("fragrance_iswvjk.png");
         }
 
         updateMetadata(fragranceEntity, fragrance);
@@ -68,27 +76,27 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
      * Update entity if the DTO contains the metadata.
      *
      * @param entity       The entity to update
-     * @param fragranceDTO The DTO containing the metadata
+     * @param fragranceData The DTO containing the metadata
      */
-    private void updateMetadata(Fragrance entity, FragranceDTO fragranceDTO) {
-        if (fragranceDTO.brandId() != null) {
-            Brand brand = brandService.getFragranceBrand(fragranceDTO.brandId());
+    private void updateMetadata(Fragrance entity, FragranceDTO fragranceData) {
+        if (fragranceData.getBrandId() != null) {
+            Brand brand = brandService.getFragranceBrand(fragranceData.getBrandId());
             entity.setBrand(brand);
         }
-        if (fragranceDTO.countryId() != null) {
-            Country country = countryService.getFragranceCountry(fragranceDTO.countryId());
+        if (fragranceData.getCountryId() != null) {
+            Country country = countryService.getFragranceCountry(fragranceData.getCountryId());
             entity.setCountry(country);
         }
-        if (fragranceDTO.perfumerIds() != null) {
-            Set<Perfumer> matching = getPerfumers(fragranceDTO);
+        if (fragranceData.getPerfumerIds() != null) {
+            Set<Perfumer> matching = getPerfumers(fragranceData);
             entity.setPerfumers(matching);
         }
-        if (fragranceDTO.noteIds() != null) {
-            Set<Note> matching = getNotes(fragranceDTO);
+        if (fragranceData.getNoteIds() != null) {
+            Set<Note> matching = getNotes(fragranceData);
             entity.setNotes(matching);
         }
-        if (fragranceDTO.concentrationIds() != null) {
-            Set<Concentration> matching = getConcentrations(fragranceDTO);
+        if (fragranceData.getConcentrationIds() != null) {
+            Set<Concentration> matching = getConcentrations(fragranceData);
             entity.setConcentrations(matching);
         }
     }
@@ -119,27 +127,31 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
     }
 
     private Set<Note> getNotes(FragranceDTO fragrance) {
-        return getEntities(noteService::getNote, fragrance.noteIds());
+        return getEntities(noteService::getNote, fragrance.getNoteIds());
     }
 
     private Set<Concentration> getConcentrations(FragranceDTO fragrance) {
-        return getEntities(concentrationService::getConcentration, fragrance.concentrationIds());
+        return getEntities(concentrationService::getConcentration, fragrance.getConcentrationIds());
     }
 
     private Set<Perfumer> getPerfumers(FragranceDTO fragrance) {
-        return getEntities(perfumerService::getPerfumer, fragrance.perfumerIds());
+        return getEntities(perfumerService::getPerfumer, fragrance.getPerfumerIds());
     }
 
     @Override
     @Transactional
-    public Fragrance update(long id, FragranceDTO fragrance) {
+    public Fragrance update(long id, FragranceDTO fragrance, MultipartFile file) {
         Fragrance foundFragrance = repo.findById(id)
                 .orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
-        foundFragrance.setName(fragrance.name());
-        foundFragrance.setYear(fragrance.year());
+        foundFragrance.setName(fragrance.getName());
+        foundFragrance.setYear(fragrance.getYear());
 
-        if (fragrance.imageUrl() != null && !fragrance.imageUrl().isBlank()) {
-            foundFragrance.setImageUrl(fragrance.imageUrl());
+//        if (fragrance.imageUrl() != null && !fragrance.imageUrl().isBlank()) {
+//            foundFragrance.setImageUrl(fragrance.imageUrl());
+//        }
+        if (file != null) {
+            String publicId = cloudinaryService.uploadImageFile(file, "scentra/fragrance");
+            foundFragrance.setImageUrl(publicId);
         }
 
         updateMetadata(foundFragrance, fragrance);

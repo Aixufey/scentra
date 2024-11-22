@@ -4,11 +4,13 @@ import com.rinseo.scentra.model.*;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceServiceV2Impl;
 import com.rinseo.scentra.service.fragrance.*;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -66,8 +68,10 @@ public class FragranceController {
      * Posting does not work with H2 because of returning the generated id is not supported.
      */
     @PostMapping("/v1/fragrances")
-    public ResponseEntity<Fragrance> save(@Valid @RequestBody FragranceDTO fragrance) {
-        Fragrance fragranceDTO = service.create(fragrance);
+    public ResponseEntity<Fragrance> save(
+            @Valid @ModelAttribute FragranceDTO fragrance,
+            @Nullable @RequestPart(value = "file") MultipartFile file) {
+        Fragrance fragranceDTO = service.create(fragrance, file);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -81,8 +85,11 @@ public class FragranceController {
     }
 
     @PutMapping("/v1/fragrances/{id}")
-    public ResponseEntity<Fragrance> update(@PathVariable long id, @Valid @RequestBody FragranceDTO fragrance) {
-        Fragrance fragranceDTO = service.update(id, fragrance);
+    public ResponseEntity<Fragrance> update(
+            @PathVariable long id,
+            @Valid @ModelAttribute FragranceDTO fragrance,
+            @Nullable @RequestPart(value = "file") MultipartFile file) {
+        Fragrance fragranceDTO = service.update(id, fragrance, file);
 
         return ResponseEntity.ok(fragranceDTO);
     }
