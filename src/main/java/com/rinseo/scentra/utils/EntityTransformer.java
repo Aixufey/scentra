@@ -24,15 +24,30 @@ public class EntityTransformer {
         if (entity instanceof Company company && map instanceof Company companyMap) {
             String imageUrl = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
             companyMap.setImageUrl(imageUrl);
+            Country country = company.getCountry();
+
+            if (country != null) {
+                // TODO: Add country image URL
+            }
         }
 
         if (entity instanceof Perfumer perfumer && map instanceof Perfumer perfumerMap) {
             String imageUrl = urlBuilder(cdnConfig.getPerfumerUrl(), perfumer.getImageUrl());
             perfumerMap.setImageUrl(imageUrl);
-            if (perfumer.getCompany() != null) {
-                String companyImageUrl = urlBuilder(cdnConfig.getCompanyUrl(), perfumer.getCompany().getImageUrl());
+            Company company = perfumer.getCompany();
+            Country country = perfumer.getCountry();
+
+            if (company != null) {
+                String companyImageUrl = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
                 perfumerMap.getCompany().setImageUrl(companyImageUrl);
+                if (company.getCountry() != null) {
+                    // TODO: Add company's country image URL
+                }
             }
+            if (country != null) {
+                // TODO: Add country image URL
+            }
+
         }
 
         if (entity instanceof Fragrance fragrance && map instanceof Fragrance fragranceMap) {
@@ -42,13 +57,15 @@ public class EntityTransformer {
             Country country = fragrance.getCountry();
 
             if (brand != null) {
+                String brandURL = urlBuilder(cdnConfig.getBrandUrl(), brand.getImageUrl());
+                fragranceMap.getBrand().setImageUrl(brandURL);
 
                 if (brand.getCountry() != null) {
                     // TODO: Add brand's country image URL
                 }
                 if (brand.getCompany() != null) {
-                    String brandCompanyUrl = urlBuilder(cdnConfig.getCompanyUrl(), brand.getCompany().getImageUrl());
-                    brand.getCompany().setImageUrl(brandCompanyUrl);
+                    String brandCompanyURL = urlBuilder(cdnConfig.getCompanyUrl(), brand.getCompany().getImageUrl());
+                    fragranceMap.getBrand().getCompany().setImageUrl(brandCompanyURL);
                 }
             }
             if (country != null) {
