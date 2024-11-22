@@ -21,7 +21,6 @@ public class EntityTransformer {
     public <T> T mapEntityUrl(T entity, Class<T> target) {
         T map = modelMapper.map(entity, target);
 
-        // Currently only Company entity is supported
         if (entity instanceof Company company && map instanceof Company companyMap) {
             String imageUrl = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
             companyMap.setImageUrl(imageUrl);
@@ -54,6 +53,23 @@ public class EntityTransformer {
             }
             if (country != null) {
                 // TODO: Add country image URL
+            }
+        }
+
+        if (entity instanceof Brand brand && map instanceof Brand brandMap) {
+            String imageUrl = urlBuilder(cdnConfig.getBrandUrl(), brand.getImageUrl());
+            brandMap.setImageUrl(imageUrl);
+            Country country = brand.getCountry();
+            Company company = brand.getCompany();
+            if (country != null) {
+                // TODO: Add country image URL
+            }
+            if (company != null) {
+                String brandCompanyURL = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
+                brandMap.getCompany().setImageUrl(brandCompanyURL);
+                if (company.getCountry() != null) {
+                    // TODO: Add company's country image URL
+                }
             }
         }
 

@@ -341,47 +341,47 @@ WHERE name = 'Switzerland';
 
 -- Insert brands
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Giorgio Armani', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731789966/scentra/brand/giorgioarmani_m6osnk.jpg',
+SELECT 'Giorgio Armani', 'giorgioarmani_m6osnk.jpg',
        (SELECT country_id FROM country WHERE name = 'Italy'),
        (SELECT company_id FROM company WHERE name = 'L’Oréal');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Christian Dior', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731790024/scentra/brand/dior_ay5rxd.jpg',
+SELECT 'Christian Dior', 'dior_ay5rxd.jpg',
        (SELECT country_id FROM country WHERE name = 'France'),
        (SELECT company_id FROM company WHERE name = 'LVMH');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Chanel', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731790020/scentra/brand/chanel_jljqhh.png',
+SELECT 'Chanel', 'chanel_jljqhh.png',
        (SELECT country_id FROM country WHERE name = 'France'),
        (SELECT company_id FROM company WHERE name = 'Chanel');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Tom Ford', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731790016/scentra/brand/tomford_ziunfc.png',
+SELECT 'Tom Ford', 'tomford_ziunfc.png',
        (SELECT country_id FROM country WHERE name = 'United States of America'),
        (SELECT company_id FROM company WHERE name = 'Estée Lauder Companies');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Calvin Klein', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731790011/scentra/brand/calvinklein_hwh0w3.png',
+SELECT 'Calvin Klein', 'calvinklein_hwh0w3.png',
        (SELECT country_id FROM country WHERE name = 'United States of America'),
        (SELECT company_id FROM company WHERE name = 'Coty Inc.');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Gucci', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731790195/scentra/brand/gucci_lhc8lo.png',
+SELECT 'Gucci', 'gucci_lhc8lo.png',
        (SELECT country_id FROM country WHERE name = 'Italy'),
        (SELECT company_id FROM company WHERE name = 'Coty Inc.');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Guerlain', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731790191/scentra/brand/guerlain_nou864.png',
+SELECT 'Guerlain', 'guerlain_nou864.png',
        (SELECT country_id FROM country WHERE name = 'France'),
        (SELECT company_id FROM company WHERE name = 'LVMH');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Yves Saint Laurent', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731790007/scentra/brand/saintlaurent_syn9c2.jpg',
+SELECT 'Yves Saint Laurent', 'saintlaurent_syn9c2.jpg',
        (SELECT country_id FROM country WHERE name = 'France'),
        (SELECT company_id FROM company WHERE name = 'L’Oréal');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Paco Rabanne', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731790003/scentra/brand/pacorabanne_w9uajh.png',
+SELECT 'Paco Rabanne', 'pacorabanne_w9uajh.png',
        (SELECT country_id FROM country WHERE name = 'Spain'),
        (SELECT company_id FROM company WHERE name = 'Puig');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Shiseido', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731789999/scentra/brand/shiseido_u2mnqk.png',
+SELECT 'Shiseido', 'shiseido_u2mnqk.png',
        (SELECT country_id FROM country WHERE name = 'Japan'),
        (SELECT company_id FROM company WHERE name = 'Shiseido');
 INSERT INTO brand (name, image_url, country_id, company_id)
-SELECT 'Maison Francis Kurkdjian', 'https://res.cloudinary.com/dx09tdgnz/image/upload/v1731789969/scentra/brand/maisonfranciskurkdjian_xuzc5a.jpg',
+SELECT 'Maison Francis Kurkdjian', 'maisonfranciskurkdjian_xuzc5a.jpg',
        (SELECT country_id FROM country WHERE name = 'France'),
        (SELECT company_id FROM company WHERE name = 'LVMH');
 

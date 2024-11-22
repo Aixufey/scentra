@@ -2,6 +2,7 @@ package com.rinseo.scentra.service;
 
 import com.rinseo.scentra.model.Brand;
 import com.rinseo.scentra.model.dto.BrandDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface BrandService {
 
     Brand getByName(String name);
 
-    Brand update(long id, BrandDTO brand);
+    Brand update(long id, BrandDTO brand, MultipartFile file);
 
-    Brand create(BrandDTO brand);
+    Brand create(BrandDTO brand, MultipartFile file);
 
     void delete(long id);
 }

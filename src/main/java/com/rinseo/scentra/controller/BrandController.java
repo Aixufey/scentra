@@ -3,10 +3,13 @@ package com.rinseo.scentra.controller;
 import com.rinseo.scentra.model.Brand;
 import com.rinseo.scentra.model.dto.BrandDTO;
 import com.rinseo.scentra.service.BrandServiceImpl;
+import com.rinseo.scentra.utils.EntityTransformer;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -17,6 +20,7 @@ import java.util.List;
 @RestController
 public class BrandController {
     private final BrandServiceImpl service;
+    private final EntityTransformer entityTransformer;
 
     @GetMapping("/brands")
     public List<Brand> getAllBrands() {
@@ -29,26 +33,33 @@ public class BrandController {
     }
 
     @PutMapping("/brands/{id}")
-    public ResponseEntity<Brand> update(@PathVariable long id, @Valid @RequestBody BrandDTO brand) {
-        Brand brandDTO = service.update(id, brand);
+    public ResponseEntity<Brand> update(
+            @PathVariable long id,
+            @Valid @ModelAttribute BrandDTO brand,
+            @Nullable @RequestPart(value = "file") MultipartFile file) {
+        Brand brandDTO = service.update(id, brand, file);
+        Brand mapped = entityTransformer.mapEntityUrl(brandDTO, Brand.class);
 
         return ResponseEntity
-                .ok(brandDTO);
+                .ok(mapped);
     }
 
     @PostMapping("/brands")
-    public ResponseEntity<Brand> create(@Valid @RequestBody BrandDTO brand) {
-        Brand brandDTO = service.create(brand);
+    public ResponseEntity<Brand> create(
+            @Valid @ModelAttribute BrandDTO brand,
+            @Nullable @RequestPart(value = "file") MultipartFile file) {
+        Brand brandDTO = service.create(brand, file);
+        Brand mapped = entityTransformer.mapEntityUrl(brandDTO, Brand.class);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(brandDTO.getId())
+                .buildAndExpand(mapped.getId())
                 .toUri();
 
         return ResponseEntity
                 .created(location)
-                .body(brandDTO);
+                .body(mapped);
     }
 
     @DeleteMapping("/brands/{id}")
