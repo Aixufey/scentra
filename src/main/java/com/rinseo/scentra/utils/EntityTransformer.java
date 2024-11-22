@@ -1,8 +1,7 @@
 package com.rinseo.scentra.utils;
 
 import com.rinseo.scentra.configuration.CDNConfig;
-import com.rinseo.scentra.model.Company;
-import com.rinseo.scentra.model.Perfumer;
+import com.rinseo.scentra.model.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -34,6 +33,27 @@ public class EntityTransformer {
             if (perfumer.getCompany() != null) {
                 String companyImageUrl = urlBuilder(cdnConfig.getCompanyUrl(), perfumer.getCompany().getImageUrl());
                 perfumerMap.getCompany().setImageUrl(companyImageUrl);
+            }
+        }
+
+        if (entity instanceof Fragrance fragrance && map instanceof Fragrance fragranceMap) {
+            String imageUrl = urlBuilder(cdnConfig.getFragranceUrl(), fragrance.getImageUrl());
+            fragranceMap.setImageUrl(imageUrl);
+            Brand brand = fragrance.getBrand();
+            Country country = fragrance.getCountry();
+
+            if (brand != null) {
+
+                if (brand.getCountry() != null) {
+                    // TODO: Add brand's country image URL
+                }
+                if (brand.getCompany() != null) {
+                    String brandCompanyUrl = urlBuilder(cdnConfig.getCompanyUrl(), brand.getCompany().getImageUrl());
+                    brand.getCompany().setImageUrl(brandCompanyUrl);
+                }
+            }
+            if (country != null) {
+                // TODO: Add country image URL
             }
         }
 

@@ -4,6 +4,7 @@ import com.rinseo.scentra.model.*;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceServiceV2Impl;
 import com.rinseo.scentra.service.fragrance.*;
+import com.rinseo.scentra.utils.EntityTransformer;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class FragranceController {
     private final FragranceCountryServiceImpl fragranceCountryService;
     private final FragranceNoteServiceImpl fragranceNoteService;
     private final FragranceConcentrationServiceImpl fragranceConcentrationService;
+    private final EntityTransformer entityTransformer;
 
     @Autowired
     public FragranceController(
@@ -34,13 +36,15 @@ public class FragranceController {
             FragranceBrandServiceImpl fragranceBrandService,
             FragranceCountryServiceImpl fragranceCountryService,
             FragranceNoteServiceImpl fragranceNoteService,
-            FragranceConcentrationServiceImpl fragranceConcentrationService) {
+            FragranceConcentrationServiceImpl fragranceConcentrationService,
+            EntityTransformer entityTransformer) {
         this.service = service;
         this.fragrancePerfumerService = fragrancePerfumerService;
         this.fragranceBrandService = fragranceBrandService;
         this.fragranceCountryService = fragranceCountryService;
         this.fragranceNoteService = fragranceNoteService;
         this.fragranceConcentrationService = fragranceConcentrationService;
+        this.entityTransformer = entityTransformer;
     }
 
     @GetMapping("/v1/fragrances")
@@ -72,16 +76,17 @@ public class FragranceController {
             @Valid @ModelAttribute FragranceDTO fragrance,
             @Nullable @RequestPart(value = "file") MultipartFile file) {
         Fragrance fragranceDTO = service.create(fragrance, file);
+        Fragrance mapped = entityTransformer.mapEntityUrl(fragranceDTO, Fragrance.class);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(fragranceDTO.getId())
+                .buildAndExpand(mapped.getId())
                 .toUri();
 
         return ResponseEntity
                 .created(location)
-                .body(fragranceDTO);
+                .body(mapped);
     }
 
     @PutMapping("/v1/fragrances/{id}")

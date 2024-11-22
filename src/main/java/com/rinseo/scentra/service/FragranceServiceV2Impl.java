@@ -6,6 +6,7 @@ import com.rinseo.scentra.model.*;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.repository.FragranceRepository;
 import com.rinseo.scentra.service.fragrance.*;
+import com.rinseo.scentra.utils.EntityTransformer;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -29,20 +30,30 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
     private final FragranceNoteServiceImpl noteService;
     private final ModelMapper modelMapper;
     private final CloudinaryServiceImpl cloudinaryService;
+    private final EntityTransformer entityTransformer;
 
     @Override
     public List<Fragrance> getAll() {
-        return repo.findAll();
+        List<Fragrance> fragrances = repo.findAll();
+        return fragrances.stream()
+                .map(f -> entityTransformer
+                        .mapEntityUrl(f, Fragrance.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Fragrance getById(long id) {
-        return repo.findById(id).orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
+        Fragrance fragrance = repo.findById(id).orElseThrow(() -> new FragranceNotFoundException("Fragrance not found with id: " + id));
+        return entityTransformer.mapEntityUrl(fragrance, Fragrance.class);
     }
 
     @Override
     public List<Fragrance> getByName(String name) {
-        return repo.findFragrancesByNameContainsIgnoreCase(name);
+        List<Fragrance> fragrances = repo.findFragrancesByNameContainsIgnoreCase(name);
+        return fragrances.stream()
+                .map(f -> entityTransformer
+                        .mapEntityUrl(f, Fragrance.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -75,7 +86,7 @@ public class FragranceServiceV2Impl implements FragranceServiceV2 {
     /**
      * Update entity if the DTO contains the metadata.
      *
-     * @param entity       The entity to update
+     * @param entity        The entity to update
      * @param fragranceData The DTO containing the metadata
      */
     private void updateMetadata(Fragrance entity, FragranceDTO fragranceData) {

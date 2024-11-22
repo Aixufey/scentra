@@ -14,10 +14,27 @@ import org.springframework.context.annotation.Configuration;
 public class CDNConfig {
     @Value("${cdn.base.url}")
     private String baseUrl;
+
     @Value("${cdn.company}")
     private String companyUrl;
-    @Value("${cdn.perfmer}")
+
+    @Value("${cdn.perfumer}")
     private String perfumerUrl;
+
+    @Value("${cdn.fragrance}")
+    private String fragranceUrl;
+
+    @Value("${cdn.brand}")
+    private String brandUrl;
+
+    @Value("${cdn.note}")
+    private String noteUrl;
+
+    @Value("${cdn.concentration}")
+    private String concentrationUrl;
+
+    @Value("${cdn.country}")
+    private String countryUrl;
 
     public String getBaseUrl(String relativePath) {
         return baseUrl + relativePath;
