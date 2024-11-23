@@ -21,16 +21,36 @@ public class EntityTransformer {
     public <T> T mapEntityUrl(T entity, Class<T> target) {
         T map = modelMapper.map(entity, target);
 
-        if (entity instanceof Company company && map instanceof Company companyMap) {
-            String imageUrl = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
-            companyMap.setImageUrl(imageUrl);
-            Country country = company.getCountry();
-
+        // Fragrance
+        if (entity instanceof Fragrance fragrance && map instanceof Fragrance fragranceMap) {
+            String imageUrl = urlBuilder(cdnConfig.getFragranceUrl(), fragrance.getImageUrl());
+            fragranceMap.setImageUrl(imageUrl);
+            Brand brand = fragrance.getBrand();
+            Country country = fragrance.getCountry();
+            if (brand != null) {
+                String brandImageUrl = urlBuilder(cdnConfig.getBrandUrl(), brand.getImageUrl());
+                fragranceMap.getBrand().setImageUrl(brandImageUrl);
+                if (brand.getCountry() != null) {
+                    String brandCountryImageUrl = urlBuilder(cdnConfig.getCountryUrl(), brand.getCountry().getImageUrl());
+                    fragranceMap.getBrand().getCountry().setImageUrl(brandCountryImageUrl);
+                }
+                if (brand.getCompany() != null) {
+                    String companyImageUrl = urlBuilder(cdnConfig.getCompanyUrl(), brand.getCompany().getImageUrl());
+                    fragranceMap.getBrand().getCompany().setImageUrl(companyImageUrl);
+                    Company company = brand.getCompany();
+                    if (company.getCountry() != null) {
+                        String companyCountryImageUrl = urlBuilder(cdnConfig.getCountryUrl(), company.getCountry().getImageUrl());
+                        fragranceMap.getBrand().getCompany().getCountry().setImageUrl(companyCountryImageUrl);
+                    }
+                }
+            }
             if (country != null) {
-                // TODO: Add country image URL
+                String countryImageUrl = urlBuilder(cdnConfig.getCountryUrl(), country.getImageUrl());
+                fragranceMap.getCountry().setImageUrl(countryImageUrl);
             }
         }
 
+        // Perfumer
         if (entity instanceof Perfumer perfumer && map instanceof Perfumer perfumerMap) {
             String imageUrl = urlBuilder(cdnConfig.getPerfumerUrl(), perfumer.getImageUrl());
             perfumerMap.setImageUrl(imageUrl);
@@ -40,60 +60,66 @@ public class EntityTransformer {
             if (company != null) {
                 String companyImageUrl = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
                 perfumerMap.getCompany().setImageUrl(companyImageUrl);
-                if (company.getCountry() != null) {
-                    // TODO: Add company's country image URL
+                Country companyCountry = company.getCountry();
+                if (companyCountry != null) {
+                    String companyCountryImageUrl = urlBuilder(cdnConfig.getCountryUrl(), companyCountry.getImageUrl());
+                    perfumerMap.getCompany().getCountry().setImageUrl(companyCountryImageUrl);
                 }
             }
+
             if (country != null) {
-                // TODO: Add country image URL
-            }
-
-        }
-
-        if (entity instanceof Fragrance fragrance && map instanceof Fragrance fragranceMap) {
-            String imageUrl = urlBuilder(cdnConfig.getFragranceUrl(), fragrance.getImageUrl());
-            fragranceMap.setImageUrl(imageUrl);
-            Brand brand = fragrance.getBrand();
-            Country country = fragrance.getCountry();
-
-            if (brand != null) {
-                String brandURL = urlBuilder(cdnConfig.getBrandUrl(), brand.getImageUrl());
-                fragranceMap.getBrand().setImageUrl(brandURL);
-
-                if (brand.getCountry() != null) {
-                    // TODO: Add brand's country image URL
-                }
-                if (brand.getCompany() != null) {
-                    String brandCompanyURL = urlBuilder(cdnConfig.getCompanyUrl(), brand.getCompany().getImageUrl());
-                    fragranceMap.getBrand().getCompany().setImageUrl(brandCompanyURL);
-                }
-            }
-            if (country != null) {
-                // TODO: Add country image URL
+                String countryImageUrl = urlBuilder(cdnConfig.getCountryUrl(), country.getImageUrl());
+                perfumerMap.getCountry().setImageUrl(countryImageUrl);
             }
         }
 
+        // Company
+        if (entity instanceof Company company && map instanceof Company companyMap) {
+            String imageUrl = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
+            companyMap.setImageUrl(imageUrl);
+            Country country = company.getCountry();
+            if (country != null) {
+                String countryImageUrl = urlBuilder(cdnConfig.getCountryUrl(), country.getImageUrl());
+                companyMap.getCountry().setImageUrl(countryImageUrl);
+            }
+        }
+
+        // Brand
         if (entity instanceof Brand brand && map instanceof Brand brandMap) {
             String imageUrl = urlBuilder(cdnConfig.getBrandUrl(), brand.getImageUrl());
             brandMap.setImageUrl(imageUrl);
             Country country = brand.getCountry();
             Company company = brand.getCompany();
+
             if (country != null) {
-                // TODO: Add country image URL
+                String countryImageUrl = urlBuilder(cdnConfig.getCountryUrl(), country.getImageUrl());
+                brandMap.getCountry().setImageUrl(countryImageUrl);
             }
             if (company != null) {
-                String brandCompanyURL = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
-                brandMap.getCompany().setImageUrl(brandCompanyURL);
-                if (company.getCountry() != null) {
-                    // TODO: Add company's country image URL
+                String companyImageUrl = urlBuilder(cdnConfig.getCompanyUrl(), company.getImageUrl());
+                brandMap.getCompany().setImageUrl(companyImageUrl);
+                Country companyCountry = company.getCountry();
+                if (companyCountry != null) {
+                    String companyCountryImageUrl = urlBuilder(cdnConfig.getCountryUrl(), companyCountry.getImageUrl());
+                    brandMap.getCompany().getCountry().setImageUrl(companyCountryImageUrl);
                 }
             }
+        }
+
+        // Country, temporary using FlagsAPI
+        if (entity instanceof Country country && map instanceof Country countryMap) {
+            //String imageUrl = urlBuilder(cdnConfig.getCountryUrl(), country.getImageUrl());
+            String imageUrl = cdnConfig.getCountryUrl() + country.getImageUrl();
+            countryMap.setImageUrl(imageUrl);
         }
 
         return map;
     }
 
     private String urlBuilder(String path, String imageName) {
-        return cdnConfig.getBaseUrl() + path + "/" + imageName;
+        if (imageName != null && !imageName.startsWith(cdnConfig.getBaseUrl())) {
+            return cdnConfig.getBaseUrl() + path + "/" + imageName;
+        }
+        return imageName;
     }
 }

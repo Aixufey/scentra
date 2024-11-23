@@ -2,6 +2,7 @@ package com.rinseo.scentra.service;
 
 import com.rinseo.scentra.model.Country;
 import com.rinseo.scentra.model.dto.CountryDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface CountryService {
 
     Country getById(long id);
 
-    CountryDTO update(long id, CountryDTO country);
+    Country update(long id, CountryDTO country, MultipartFile file);
 
-    CountryDTO create(CountryDTO country);
+    Country create(CountryDTO country, MultipartFile file);
 
     void delete(long id);
 }

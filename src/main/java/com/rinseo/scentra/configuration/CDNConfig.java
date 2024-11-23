@@ -36,6 +36,9 @@ public class CDNConfig {
     @Value("${cdn.country}")
     private String countryUrl;
 
+    @Value("${cdn.accord}")
+    private String accordUrl;
+
     public String getBaseUrl(String relativePath) {
         return baseUrl + relativePath;
     }

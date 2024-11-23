@@ -30,6 +30,8 @@ public class Country implements Serializable {
     @Size(min = 4, message = "Country name must be at least 4 characters long.")
     @Column(unique = true)
     private String name;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     // One-to-many relationships
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)

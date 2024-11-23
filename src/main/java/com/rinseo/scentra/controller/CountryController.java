@@ -2,11 +2,13 @@ package com.rinseo.scentra.controller;
 
 import com.rinseo.scentra.model.Country;
 import com.rinseo.scentra.model.dto.CountryDTO;
-import com.rinseo.scentra.service.CountryService;
+import com.rinseo.scentra.service.CountryServiceImpl;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -16,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController()
 public class CountryController {
-    private final CountryService service;
+    private final CountryServiceImpl service;
 
     @GetMapping("/countries")
     public List<Country> getAllCountries() {
@@ -34,26 +36,31 @@ public class CountryController {
     }
 
     @PutMapping("/countries/{id}")
-    public ResponseEntity<CountryDTO> updateCountry(@PathVariable long id, @Valid @RequestBody CountryDTO country) {
-        CountryDTO countryDTO = service.update(id, country);
+    public ResponseEntity<Country> updateCountry(
+            @PathVariable long id,
+            @Valid @ModelAttribute CountryDTO country,
+            @Nullable @RequestParam("file") MultipartFile file) {
+        Country countryData = service.update(id, country, file);
 
         return ResponseEntity
-                .ok(countryDTO);
+                .ok(countryData);
     }
 
     @PostMapping("/countries")
-    public ResponseEntity<CountryDTO> save(@Valid @RequestBody CountryDTO country) {
-        CountryDTO countryDTO = service.create(country);
+    public ResponseEntity<Country> save(
+            @Valid @ModelAttribute CountryDTO country,
+            @Nullable @RequestParam("file") MultipartFile file) {
+        Country countryData = service.create(country, file);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(countryDTO.id())
+                .buildAndExpand(countryData.getId())
                 .toUri();
 
         return ResponseEntity
                 .created(location)
-                .body(countryDTO);
+                .body(countryData);
     }
 
     @DeleteMapping("/countries/{id}")
