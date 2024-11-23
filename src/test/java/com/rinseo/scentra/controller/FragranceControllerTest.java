@@ -5,6 +5,7 @@ import com.rinseo.scentra.model.Fragrance;
 import com.rinseo.scentra.model.dto.FragranceDTO;
 import com.rinseo.scentra.service.FragranceServiceV2Impl;
 import com.rinseo.scentra.service.fragrance.*;
+import com.rinseo.scentra.utils.EntityTransformer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,9 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
         FragranceBrandServiceImpl.class,
         FragranceCountryServiceImpl.class,
         FragranceNoteServiceImpl.class,
-        FragranceConcentrationServiceImpl.class})
+        FragranceConcentrationServiceImpl.class,
+        EntityTransformer.class
+})
 //@Import(FragranceControllerTest.TestConfig.class)
 class FragranceControllerTest {
     @Autowired
