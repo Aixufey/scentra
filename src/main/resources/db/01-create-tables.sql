@@ -14,7 +14,8 @@ DROP TABLE IF EXISTS perfumer_brand CASCADE;
 CREATE TABLE country
 (
     country_id SERIAL PRIMARY KEY,
-    name       TEXT NOT NULL UNIQUE
+    name       TEXT NOT NULL UNIQUE,
+    image_url  TEXT
 );
 
 CREATE TABLE company
@@ -22,6 +23,7 @@ CREATE TABLE company
     company_id SERIAL PRIMARY KEY,
     name       TEXT NOT NULL UNIQUE,
     country_id INT,
+    image_url  TEXT,
     FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE SET NULL
 );
 
@@ -31,7 +33,8 @@ CREATE TABLE brand
     name       TEXT NOT NULL UNIQUE,
     country_id INT,
     company_id INT,
-    FOREIGN KEY (country_id) REFERENCES country (country_id), ON DELETE SET NULL
+    image_url  TEXT,
+    FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE SET NULL,
     FOREIGN KEY (company_id) REFERENCES company (company_id) ON DELETE RESTRICT
 );
 
@@ -64,6 +67,7 @@ CREATE TABLE perfumer
     name        TEXT NOT NULL UNIQUE,
     company_id  INT,
     country_id  INT,
+    image_url   TEXT,
     FOREIGN KEY (company_id) REFERENCES company (company_id),
     FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE SET NULL
 );
@@ -75,6 +79,7 @@ CREATE TABLE fragrance
     year         INT,
     brand_id     INT,
     country_id   INT,
+    image_url    TEXT,
     FOREIGN KEY (brand_id) REFERENCES brand (brand_id),
     FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE SET NULL
 );

@@ -1,6 +1,7 @@
 -- Insert Acqua di Giò Profondo
-INSERT INTO fragrance (name, "year", brand_id, country_id)
-SELECT 'Acqua di Giò Profondo', 2020,
+INSERT INTO fragrance (name, "year", image_url, brand_id, country_id)
+SELECT 'Acqua di Giò Profondo',
+       2020, 'profondo_hksghw.jpg',
        (SELECT brand_id FROM brand WHERE name = 'Giorgio Armani'),
        (SELECT country_id FROM country WHERE name = 'Italy');
 INSERT INTO fragrance_concentration (fragrance_id, concentration_id)
